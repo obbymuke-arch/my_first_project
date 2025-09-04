@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerJobConnect</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header role="banner">
+        <div class="container header-flex">
+            <h1 class="logo" aria-label="CareerJobConnect">CareerJobConnect</h1>
+            <nav role="navigation" aria-label="Main Navigation">
+                <ul class="nav-list" role="menubar">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#jobs">Job Search</a></li>
+                    <li><a href="#applications">My Applications</a></li>
+                    <li><a href="#profile">My Profile</a></li>
+                    <li><button id="post-job-btn" class="nav-btn">Post Job</button></li>
+                    <li><button id="register-btn" class="nav-btn">Register</button></li>
+                        
+                    <li><a href="#about">About</a></li>
+                </ul>
+    
+    
+    <div id="register-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal" id="close-register-modal">&times;</span>
+            <h2>Register</h2>
+            <form id="register-form">
+                <label for="register-role">Register as:</label>
+                <select id="register-role">
+                    <option value="jobseeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+                <input type="text" id="register-username" placeholder="Username" required />
+                <input type="email" id="register-email" placeholder="Email" required />
+                <input type="password" id="register-password" placeholder="Password" required />
+                <div id="employer-extra-fields" style="display:none;">
+                    <input type="text" id="register-company" placeholder="Company Name" />
+                    <input type="text" id="register-company-location" placeholder="Company Location" />
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+        
+                
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>Welcome to CareerJobConnect</h2>
+                <p>Your gateway to career opportunities. Find your dream job or the perfect candidate today.</p>
+                <a href="#jobs" class="cta-btn">Browse Jobs</a>
+            </div>
+        </section>
+        <section id="jobs">
+            <div class="container">
+                <h2>Job Search</h2>
+                <div class="job-search-bar">
+                    <input type="text" id="keyword-search" placeholder="Search jobs by keyword..." />
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Design">Design</option>
+                        <option value="Product">Product</option>
+                    </select>
+                    <select id="salary-filter">
+                        <option value="all">All Salaries</option>
+                        <option value="0-50000">0-50,000</option>
+                        <option value="50000-100000">50,000-100,000</option>
+                        <option value="100000+">100,000+</option>
+                    </select>
+                </div>
+                <div class="job-filter">
+                    <label for="location-filter">Filter by location:</label>
+                    <select id="location-filter">
+                        <option value="all">All</option>
+                        <option value="Remote">Remote</option>
+                        <option value="New York, NY">New York, NY</option>
+                        <option value="San Francisco, CA">San Francisco, CA</option>
+                    </select>
+                </div>
+                <div id="job-list" class="job-list"></div>
+                <div class="dashboard-analytics" id="user-analytics" style="display:none;"></div>
+            </div>
+        </section>
+
+        <section id="applications" style="display:none;">
+            <div class="container">
+                <h2>My Applications</h2>
+                <div id="application-list" class="job-list"></div>
+                <div class="dashboard-analytics" id="application-analytics"></div>
+            </div>
+        </section>
+
+        <section id="profile" style="display:none;">
+            <div class="container">
+                <h2>My Profile</h2>
+                <form id="profile-form" class="profile-form">
+                    <input type="file" id="profile-picture" accept="image/*" />
+                    <img id="profile-picture-preview" src="" alt="Profile Picture" style="display:none;max-width:100px;border-radius:50%;margin-bottom:1rem;" />
+                    <input type="text" id="profile-name" placeholder="Full Name" required />
+                    <input type="email" id="profile-email" placeholder="Email" required />
+                    <textarea id="profile-summary" placeholder="Professional Summary" rows="4"></textarea>
+                    <input type="text" id="profile-skills" placeholder="Skills (comma separated)" />
+                    <input type="file" id="resume-upload" accept="application/pdf,.doc,.docx" />
+                    <a id="resume-download" href="#" style="display:none;">Download Resume</a>
+                    <button type="submit">Save Profile</button>
+                </form>
+                <div id="profile-skills-list" class="skills-list"></div>
+                <div class="profile-settings">
+                    <h3>Settings</h3>
+                    <form id="settings-form">
+                        <input type="password" id="change-password" placeholder="Change Password" />
+                        <span id="password-strength" style="margin-left:1rem;"></span>
+                        <label><input type="checkbox" id="email-notifications" /> Email Notifications</label>
+                        <label><input type="checkbox" id="sms-notifications" /> SMS Notifications</label>
+                        <button type="submit">Save Settings</button>
+                    </form>
+                </div>
+                <div class="profile-details">
+                    <h3>Additional Details</h3>
+                    <input type="text" id="profile-location" placeholder="Location" />
+                    <input type="text" id="profile-phone" placeholder="Phone Number" />
+                </div>
+                <div class="profile-history">
+                    <h3>Application History</h3>
+                    <div id="profile-application-history" class="job-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="company" style="display:none;">
+            <div class="container">
+                <h2>Company Dashboard</h2>
+                <div class="dashboard-analytics" id="company-analytics"></div>
+                <form id="post-job-form" class="post-job-form">
+                    <input type="text" id="job-title" placeholder="Job Title" required />
+                    <input type="text" id="job-company" placeholder="Company Name" required />
+                    <input type="text" id="job-location" placeholder="Location" required />
+                    <select id="job-category">
+                        <option value="Engineering">Engineering</option>
+                        <option value="Design">Design</option>
+                        <option value="Product">Product</option>
+                    </select>
+                    <input type="number" id="job-salary" placeholder="Salary" min="0" />
+                    <button type="submit">Post Job</button>
+                </form>
+                <h3>Posted Jobs</h3>
+                <div id="company-job-list" class="job-list"></div>
+                <h3>Edit/Remove Jobs</h3>
+                <div id="edit-job-list" class="job-list"></div>
+                <h3>Applicants</h3>
+                <div id="applicant-list" class="job-list"></div>
+                <h3>Schedule Interviews</h3>
+                <form id="schedule-interview-form" class="schedule-form">
+                    <input type="text" id="interview-applicant" placeholder="Applicant Name" required />
+                    <input type="datetime-local" id="interview-date" required />
+                    <button type="submit">Schedule Interview</button>
+                </form>
+                <div id="interview-list" class="job-list"></div>
+            </div>
+        </section>
+        <section id="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>CareerJobConnect is dedicated to connecting job seekers with top employers. Our platform makes job searching and hiring simple, fast, and effective.</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CareerJobConnect. All rights reserved.</p>
+            <div id="notification-bar" style="margin-top:1rem;color:#0077cc;"></div>
+        </div>
+    </footer>
+    <script src="scripts/app.js"></script>
+    <script>
+    
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        const hero = document.querySelector('.hero');
+        hero.style.opacity = 0;
+        hero.style.transform = 'translateY(40px)';
+        setTimeout(() => {
+            hero.style.transition = 'opacity 0.8s, transform 0.8s';
+            hero.style.opacity = 1;
+            hero.style.transform = 'translateY(0)';
+        }, 200);
+    });
+    </script>
+</body>
+</html>
