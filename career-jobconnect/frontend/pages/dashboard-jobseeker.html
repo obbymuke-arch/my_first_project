@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Dashboard | CareerJobConnect</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <!-- Notification Bar -->
+    <div id="notificationBar" style="display:none;position:fixed;top:0;left:0;width:100vw;z-index:999;background:#0077cc;color:#fff;padding:1rem 2rem;font-size:1.08rem;font-weight:500;box-shadow:0 2px 12px rgba(0,119,204,0.13);transition:top 0.3s;">
+        <span id="notificationMsg"></span>
+        <button id="closeNotification" style="background:none;border:none;color:#fff;font-size:1.2rem;font-weight:700;float:right;cursor:pointer;">&times;</button>
+    </div>
+    <header style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem 1.2rem 2rem;background:#fff;box-shadow:0 2px 12px rgba(0,119,204,0.06);">
+        <a href="../pages/index.html" class="dashboard-logo">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" height="38" width="38">
+                <rect x="6" y="14" width="32" height="20" rx="6" fill="#0077cc"/>
+                <rect x="12" y="20" width="20" height="8" rx="3" fill="#fff"/>
+                <path d="M14 28c0 2 2 4 4 4h8c2 0 4-2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 14v-2a4 4 0 0 1 8 0v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 24c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4 2-4 4-4 2 4 4 4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            CareerJobConnect
+        </a>
+        <div class="profile-dropdown" style="position:relative;">
+            <button id="profileBtn" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:0.7rem;">
+                <span style="background:#0077cc;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;">JS</span>
+                <span style="font-weight:600;color:#0077cc;">Jobseeker</span>
+                <svg width="18" height="18" fill="#0077cc" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0l-4.25-4.39a.75.75 0 0 1 .02-1.06z"/></svg>
+            </button>
+            <div id="profileMenu" style="display:none;position:absolute;right:0;top:48px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,119,204,0.13);padding:2rem 2rem 1.5rem 2rem;min-width:340px;z-index:100;">
+                <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem;">
+                    <img src="../assets/profile-pic.png" alt="Profile Picture" style="width:64px;height:64px;border-radius:50%;object-fit:cover;background:#e3f0ff;">
+                    <div>
+                        <div id="profileName" style="font-size:1.2rem;font-weight:700;color:#0077cc;">Jane Doe</div>
+                        <div id="profileTitle" style="color:#555;font-size:1rem;">Software Developer</div>
+                        <div id="profileLocation" style="color:#888;font-size:0.98rem;">Nairobi, Kenya</div>
+                    </div>
+                </div>
+                <div style="margin-bottom:1rem;"><strong>About Me:</strong><br><span id="profileAbout" style="color:#444;">Passionate developer with 3+ years of experience building web applications.</span></div>
+                <div style="margin-bottom:1rem;"><strong>Skills:</strong> <span id="profileSkills" style="color:#0077cc;">JavaScript, HTML, CSS, React, Node.js</span></div>
+                <div style="margin-bottom:1rem;"><strong>Education:</strong> <span id="profileEducation">BSc Computer Science, University of Nairobi, 2022</span></div>
+                <div style="margin-bottom:1rem;"><strong>Experience:</strong> <span id="profileExperience">Software Developer, TechCorp (2022-2025)</span></div>
+                <div style="margin-bottom:1.2rem;"><a href="../assets/mock-resume.pdf" download style="color:#0077cc;text-decoration:underline;font-weight:500;">Download Resume</a></div>
+                <div style="display:flex;gap:1rem;">
+                    <button class="profile-btn" id="settingsBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Settings</button>
+                    <button class="profile-btn" id="logoutBtn" style="background:#d32f2f;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#profile">Profile</a></li>
+            <li><a href="#search">Job Search</a></li>
+            <li><a href="#applications">Applications</a></li>
+            <li><a href="#interviews">Interviews & Offers</a></li>
+            <li><a href="#resources">Career Resources</a></li>
+        </ul>
+    </aside>
+    <main class="dashboard-main">
+        <section class="dashboard-title">Job Seeker Dashboard</section>
+        <div class="dashboard-cards" style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <div class="dashboard-card" style="flex:1; min-width:220px; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,119,204,0.07); padding:1.5rem;">
+                <h3 style="color:#0077cc; font-size:1.1rem; margin-bottom:0.7rem;">� Applications</h3>
+                <div id="applicationsCount" style="font-size:2.1rem; font-weight:700; color:#222;">0</div>
+                <div style="color:#888; font-size:0.98rem;">Applications Submitted</div>
+            </div>
+            <div class="dashboard-card" style="flex:1; min-width:220px; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,119,204,0.07); padding:1.5rem;">
+                <h3 style="color:#0077cc; font-size:1.1rem; margin-bottom:0.7rem;">�️ Interviews</h3>
+                <div id="interviewsCount" style="font-size:2.1rem; font-weight:700; color:#222;">0</div>
+                <div style="color:#888; font-size:0.98rem;">Interviews Scheduled</div>
+            </div>
+            <div class="dashboard-card" style="flex:1; min-width:220px; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,119,204,0.07); padding:1.5rem;">
+                <h3 style="color:#0077cc; font-size:1.1rem; margin-bottom:0.7rem;">🎯 Offers</h3>
+                <div id="offersCount" style="font-size:2.1rem; font-weight:700; color:#222;">0</div>
+                <div style="color:#888; font-size:0.98rem;">Offers Received</div>
+            </div>
+        </div>
+        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">Application Status Overview</h3>
+            <canvas id="statusChart" height="80"></canvas>
+        </div>
+        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">Applications Over Time</h3>
+            <canvas id="applicationsLineChart" height="80"></canvas>
+        </div>
+        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">Conversion Rates</h3>
+            <canvas id="conversionRatesChart" height="80"></canvas>
+        </div>
+        </div>
+        <section id="search">
+            <h2>Job Search</h2>
+            <input type="text" placeholder="Search jobs by keyword, location, or company..." style="width:100%;margin-bottom:1rem;">
+            <div id="job-list-demo"></div>
+        </section>
+        <section id="applications">
+            <h2>My Applications</h2>
+            <div id="applicationsFilterBar" style="margin:1.2rem 0 0.5rem 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+                <input id="filterJobTitle" type="text" placeholder="Filter by Job Title" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:180px;">
+                <input id="filterCompany" type="text" placeholder="Filter by Company" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:180px;">
+                <select id="filterStatus" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:140px;">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Shortlisted">Shortlisted</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Accepted">Accepted</option>
+                </select>
+            </div>
+            <div id="applicationsTableContainer" style="margin-top:1.5rem;"></div>
+        </section>
+        <section id="interviews">
+            <h2>Interviews & Offers</h2>
+            <div>No interviews scheduled yet.</div>
+        </section>
+        <section id="resources">
+            <h2>Career Resources</h2>
+            <ul>
+                <li><a href="#">Resume Writing Tips</a></li>
+                <li><a href="#">Interview Preparation Guide</a></li>
+                <li><a href="#">Career Growth Advice</a></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 CareerJobConnect</p>
+    </footer>
+    <script src="../js/jobseeker.js"></script>
+    <script src="../js/job-list-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // --- Advanced Analytics: Applications Over Time & Conversion Rates ---
+    function renderAdvancedAnalytics() {
+        let apps = [];
+        try { apps = JSON.parse(localStorage.getItem('cj_applications') || '[]'); } catch { apps = []; }
+        // Get current jobseeker email from localStorage (set at login)
+        let userEmail = '';
+        try {
+            const user = JSON.parse(localStorage.getItem('cj_current_user') || 'null');
+            if (user && user.email) userEmail = user.email;
+        } catch {}
+        apps = apps.filter(app => app.jobseeker && app.jobseeker.email === userEmail);
+        // Applications Over Time (by day)
+        const dateCounts = {};
+        apps.forEach(app => {
+            const d = new Date(app.appliedAt);
+            const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+            dateCounts[key] = (dateCounts[key]||0)+1;
+        });
+        const sortedDates = Object.keys(dateCounts).sort();
+        const lineData = sortedDates.map(date => dateCounts[date]);
+        // Conversion Rates
+        const total = apps.length;
+        const accepted = apps.filter(a=>a.status==='Accepted').length;
+        const rejected = apps.filter(a=>a.status==='Rejected').length;
+        const pending = apps.filter(a=>!a.status||a.status==='Pending').length;
+        // Applications to Accepted, Applications to Rejected
+        const conversionRates = [
+            total ? Math.round((accepted/total)*100) : 0,
+            total ? Math.round((rejected/total)*100) : 0,
+            total ? Math.round((pending/total)*100) : 0
+        ];
+        // Line Chart
+        const ctxLine = document.getElementById('applicationsLineChart').getContext('2d');
+        if(window.applicationsLineChartObj) window.applicationsLineChartObj.destroy();
+        window.applicationsLineChartObj = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: sortedDates,
+                datasets: [{
+                    label: 'Applications',
+                    data: lineData,
+                    borderColor: '#0077cc',
+                    backgroundColor: 'rgba(0,119,204,0.08)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Date' } }, y: { beginAtZero: true, title: { display: true, text: 'Applications' } } } }
+        });
+        // Conversion Rates Chart
+        const ctxConv = document.getElementById('conversionRatesChart').getContext('2d');
+        if(window.conversionRatesChartObj) window.conversionRatesChartObj.destroy();
+        window.conversionRatesChartObj = new Chart(ctxConv, {
+            type: 'bar',
+            data: {
+                labels: ['Accepted','Rejected','Pending'],
+                datasets: [{
+                    label: 'Conversion Rate (%)',
+                    data: conversionRates,
+                    backgroundColor: ['#43a047','#d32f2f','#ff9800']
+                }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percent (%)' } } } }
+        });
+    }
+    window.addEventListener('DOMContentLoaded', renderAdvancedAnalytics);
+    </script>
+    <script>
+    // --- Analytics Cards and Chart ---
+    function updateAnalytics() {
+        let apps = [];
+        try { apps = JSON.parse(localStorage.getItem('cj_applications') || '[]'); } catch { apps = []; }
+        // Get current jobseeker email from localStorage (set at login)
+        let userEmail = '';
+        try {
+            const user = JSON.parse(localStorage.getItem('cj_current_user') || 'null');
+            if (user && user.email) userEmail = user.email;
+        } catch {}
+        apps = apps.filter(app => app.jobseeker && app.jobseeker.email === userEmail);
+        document.getElementById('applicationsCount').textContent = apps.length;
+        // For demo, interviews = status Shortlisted, offers = status Accepted
+        const interviews = apps.filter(a => a.status === 'Shortlisted').length;
+        const offers = apps.filter(a => a.status === 'Accepted').length;
+        document.getElementById('interviewsCount').textContent = interviews;
+        document.getElementById('offersCount').textContent = offers;
+        // Chart
+        const statusCounts = { 'Pending': 0, 'Shortlisted': 0, 'Rejected': 0, 'Accepted': 0 };
+        apps.forEach(a => { statusCounts[a.status || 'Pending'] = (statusCounts[a.status || 'Pending'] || 0) + 1; });
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        if (window.statusChartObj) window.statusChartObj.destroy();
+        window.statusChartObj = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(statusCounts),
+                datasets: [{
+                    data: Object.values(statusCounts),
+                    backgroundColor: ['#0077cc','#43a047','#d32f2f','#ff9800'],
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+        });
+    }
+    window.addEventListener('DOMContentLoaded', updateAnalytics);
+    // --- Real-time Notification Bar Logic ---
+    function showNotification(msg) {
+        const bar = document.getElementById('notificationBar');
+        const msgSpan = document.getElementById('notificationMsg');
+        bar.style.display = 'block';
+        msgSpan.textContent = msg;
+        setTimeout(() => { bar.style.display = 'none'; }, 7000);
+    }
+    document.getElementById('closeNotification').onclick = function() {
+        document.getElementById('notificationBar').style.display = 'none';
+    };
+    // Simulate notifications for demo
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => showNotification('🎉 New job matches available for you!'), 2000);
+        setTimeout(() => showNotification('✅ Your application for UI/UX Designer was shortlisted!'), 8000);
+        setTimeout(() => showNotification('📅 You have a new interview invite!'), 15000);
+    });
+    </script>
+    <script>
+    // --- Dynamic Applications Table with Filtering ---
+    function renderApplications() {
+        const container = document.getElementById('applicationsTableContainer');
+        let apps = [];
+        try { apps = JSON.parse(localStorage.getItem('cj_applications') || '[]'); } catch { apps = []; }
+        // Get current jobseeker email from localStorage (set at login)
+        let userEmail = '';
+        try {
+            const user = JSON.parse(localStorage.getItem('cj_current_user') || 'null');
+            if (user && user.email) userEmail = user.email;
+        } catch {}
+        apps = apps.filter(app => app.jobseeker && app.jobseeker.email === userEmail);
+        // Filter logic
+        const jobFilter = (document.getElementById('filterJobTitle') || {}).value?.toLowerCase() || '';
+        const companyFilter = (document.getElementById('filterCompany') || {}).value?.toLowerCase() || '';
+        const statusFilter = (document.getElementById('filterStatus') || {}).value || '';
+        const filtered = apps.filter(app => {
+            const jobMatch = app.jobTitle.toLowerCase().includes(jobFilter);
+            const companyMatch = app.company.toLowerCase().includes(companyFilter);
+            const status = app.status || 'Pending';
+            const statusMatch = !statusFilter || status === statusFilter;
+            return jobMatch && companyMatch && statusMatch;
+        });
+        if (!filtered.length) {
+            container.innerHTML = '<div style="color:#888;font-size:1.05rem;">No applications found for the selected filters.</div>';
+            return;
+        }
+        container.innerHTML = `
+            <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,119,204,0.04);">
+                <thead>
+                    <tr style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+                        <th style="padding:0.7rem 1rem;text-align:left;">Job</th>
+                        <th style="padding:0.7rem 1rem;text-align:left;">Company</th>
+                        <th style="padding:0.7rem 1rem;text-align:left;">Status</th>
+                        <th style="padding:0.7rem 1rem;text-align:left;">CV / Credentials</th>
+                        <th style="padding:0.7rem 1rem;text-align:left;">Interview</th>
+                        <th style="padding:0.7rem 1rem;text-align:left;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filtered.map((app, idx) => {
+                        let files = (app.uploadedFiles || []);
+                        let fileLinks = files.length ? files.map((file, fidx) =>
+                            `<div style='margin-bottom:4px;'>
+                                <a href="data:${file.type};base64,${file.base64}" download="${file.name}" target="_blank" style="color:#0077cc;text-decoration:underline;">${file.name}</a>
+                                <button onclick="(function(){
+                                    const blob = b64toBlob('${file.base64}', '${file.type}');
+                                    const url = URL.createObjectURL(blob);
+                                    window.open(url, '_blank');
+                                    setTimeout(()=>URL.revokeObjectURL(url), 5000);
+                                })()" style="margin-left:6px;font-size:0.9em;">👁️</button>
+                            </div>`
+                        ).join('') : '<span style="color:#888;">No files</span>';
+                        return `
+                        <tr data-idx="${idx}">
+                            <td style="padding:0.7rem 1rem;">${app.jobTitle}</td>
+                            <td style="padding:0.7rem 1rem;">${app.company}</td>
+                            <td style="padding:0.7rem 1rem;">${app.status || 'Pending'}</td>
+                            <td style="padding:0.7rem 1rem;">${fileLinks}</td>
+                            <td style="padding:0.7rem 1rem;">${app.interview ? app.interview : '<span style=\"color:#888;\">-</span>'}</td>
+                            <td style="padding:0.7rem 1rem;">
+                                <button class="withdraw-btn" style="background:#d32f2f;color:#fff;border:none;border-radius:6px;padding:0.4rem 1rem;font-size:0.98rem;font-weight:600;cursor:pointer;">Withdraw</button>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+            <script>
+            function b64toBlob(b64Data, contentType='', sliceSize=512) {
+                const byteCharacters = atob(b64Data);
+                const byteArrays = [];
+                for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    const slice = byteCharacters.slice(offset, offset + sliceSize);
+                    const byteNumbers = new Array(slice.length);
+                    for (let i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    byteArrays.push(byteArray);
+                }
+                return new Blob(byteArrays, {type: contentType});
+            }
+            <\/script>
+        // Add event listeners for withdraw
+        container.querySelectorAll('.withdraw-btn').forEach((btn, idx) => {
+            btn.onclick = function() {
+                const realIdx = apps.findIndex(a => a.jobTitle === filtered[idx].jobTitle && a.company === filtered[idx].company && (a.status || 'Pending') === (filtered[idx].status || 'Pending'));
+                if (realIdx !== -1) {
+                    apps.splice(realIdx, 1);
+                    localStorage.setItem('cj_applications', JSON.stringify(apps));
+                    renderApplications();
+                }
+            };
+        });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+        renderApplications();
+        ['filterJobTitle','filterCompany','filterStatus'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', renderApplications);
+            if (el && el.tagName === 'SELECT') el.addEventListener('change', renderApplications);
+        });
+    });
+    </script>
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:200;align-items:center;justify-content:center;overflow:auto;">
+        <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;justify-content:space-between;">
+            <h2 style="color:#0077cc;margin-bottom:1.2rem;">Edit Profile</h2>
+            <form id="editProfileForm" style="display:flex;flex-direction:column;gap:1rem;">
+                <label>Full Name<input type="text" id="editName" required></label>
+                <label>Professional Title<input type="text" id="editTitle" required></label>
+                <label>Location<input type="text" id="editLocation" required></label>
+                <label>About Me<textarea id="editAbout" rows="2" required></textarea></label>
+                <label>Skills<input type="text" id="editSkills" required placeholder="Comma separated"></label>
+                <label>Education<input type="text" id="editEducation" required></label>
+                <label>Experience<input type="text" id="editExperience" required></label>
+                <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                    <button type="button" id="cancelEditBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Cancel</button>
+                    <button type="submit" id="saveProfileBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    // Profile dropdown logic
+    const profileBtn = document.getElementById('profileBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    document.addEventListener('click', function(e) {
+        if (profileBtn && profileMenu) {
+            if (profileBtn.contains(e.target)) {
+                profileMenu.style.display = profileMenu.style.display === 'block' ? 'none' : 'block';
+            } else if (!profileMenu.contains(e.target) && !document.getElementById('profileModal').contains(e.target)) {
+                profileMenu.style.display = 'none';
+            }
+        }
+    });
+    // Settings modal logic
+    const settingsBtn = document.getElementById('settingsBtn');
+    const profileModal = document.getElementById('profileModal');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editProfileForm = document.getElementById('editProfileForm');
+    settingsBtn.addEventListener('click', function() {
+        document.getElementById('editName').value = document.getElementById('profileName').textContent;
+        document.getElementById('editTitle').value = document.getElementById('profileTitle').textContent;
+        document.getElementById('editLocation').value = document.getElementById('profileLocation').textContent;
+        document.getElementById('editAbout').value = document.getElementById('profileAbout').textContent;
+        document.getElementById('editSkills').value = document.getElementById('profileSkills').textContent;
+        document.getElementById('editEducation').value = document.getElementById('profileEducation').textContent;
+        document.getElementById('editExperience').value = document.getElementById('profileExperience').textContent;
+        profileModal.style.display = 'flex';
+        profileModal.scrollTop = 0;
+    });
+    cancelEditBtn.addEventListener('click', function() {
+        profileModal.style.display = 'none';
+    });
+    editProfileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('profileName').textContent = document.getElementById('editName').value;
+        document.getElementById('profileTitle').textContent = document.getElementById('editTitle').value;
+        document.getElementById('profileLocation').textContent = document.getElementById('editLocation').value;
+        document.getElementById('profileAbout').textContent = document.getElementById('editAbout').value;
+        document.getElementById('profileSkills').textContent = document.getElementById('editSkills').value;
+        document.getElementById('profileEducation').textContent = document.getElementById('editEducation').value;
+        document.getElementById('profileExperience').textContent = document.getElementById('editExperience').value;
+        profileModal.style.display = 'none';
+    });
+    // Log out logic
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', function() {
+        window.location.href = 'login.html';
+    });
+    </script>
+</body>
+</html>

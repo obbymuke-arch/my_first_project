@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerJobConnect</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .section { display: none; max-width: 900px; margin: 2rem auto; background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,119,204,0.06); padding: 2.5rem 2rem; }
+        .section.active { display: block; animation: fadeIn 0.7s; }
+        .cta-btn { background: #0077cc; color: #fff; padding: 0.8rem 2.2rem; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(0,119,204,0.08); transition: background 0.2s, transform 0.1s; margin: 0 0.5rem; }
+        .cta-btn:hover { background: #005fa3; transform: scale(1.04); }
+        .categories-list { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; margin-top: 1.2rem; }
+        .category-card { background: #e3f0ff; border-radius: 10px; padding: 1.2rem 2rem; min-width: 180px; text-align: center; font-weight: 600; color: #0077cc; box-shadow: 0 1px 6px rgba(0,119,204,0.07); transition: box-shadow 0.2s, transform 0.1s; }
+        .category-card:hover { box-shadow: 0 4px 16px rgba(0,119,204,0.13); transform: translateY(-2px) scale(1.03); }
+        .contact-details { margin-top: 1.5rem; color: #444; font-size: 1.08rem; }
+        .contact-details strong { color: #0077cc; }
+        .section-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0.7;
+        }
+        .section-content {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar" style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="nav-left" style="display:flex;align-items:center;">
+                <!-- SVG Logo: Two interlocking hands (connection) and briefcase (career) -->
+                <span style="display:inline-block;height:44px;width:44px;margin-right:1rem;vertical-align:middle;">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" height="44" width="44">
+                        <rect x="6" y="14" width="32" height="20" rx="6" fill="#0077cc"/>
+                        <rect x="12" y="20" width="20" height="8" rx="3" fill="#fff"/>
+                        <path d="M14 28c0 2 2 4 4 4h8c2 0 4-2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M18 14v-2a4 4 0 0 1 8 0v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M10 24c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4 2-4 4-4 2 4 4 4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <a href="#home" class="logo" style="font-size:1.7rem;color:#0077cc;text-decoration:none;font-weight:bold;">CareerJobConnect</a>
+            </div>
+            <ul class="nav-list" style="display:flex;gap:1.5rem;list-style:none;margin:0;">
+                <li><a href="#home" class="nav-link" data-section="home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-section="about">About Us</a></li>
+                <li><a href="#categories" class="nav-link" data-section="categories">Categories</a></li>
+                <li><a href="#post-job" class="nav-link" data-section="postjob">Post Job</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    <section id="section-home" class="section active" style="background-size: cover; background-position: center;">
+            <div class="section-bg"></div>
+            <div class="section-content">
+                <h1 style="color:#0077cc;margin-top:2rem;">Welcome to CareerJobConnect</h1>
+                <p style="font-size:1.15rem; color:#444; max-width:700px; margin:1.2rem auto 2rem auto;">CareerJobConnect is your one-stop platform for job seekers, employers, and administrators. Discover opportunities, post jobs, manage applications, and make data-driven career decisions—all in one modern, intuitive system.</p>
+                <div style="display:flex;gap:2rem;justify-content:center;">
+                    <a href="register.html" class="cta-btn">Register</a>
+                    <a href="login.html" class="cta-btn">Login</a>
+                </div>
+            </div>
+        </section>
+    <section id="section-about" class="section" style="background-size: cover; background-position: center;">
+            <div class="section-bg"></div>
+            <div class="section-content">
+                <h2 style="color:#0077cc;margin-top:2rem;">About CareerJobConnect</h2>
+                <p style="font-size:1.08rem; color:#444;">CareerJobConnect bridges the gap between job seekers and employers with a seamless, user-friendly experience. Our platform offers advanced job search, application tracking, employer branding, and admin analytics to empower your career journey or hiring process.</p>
+                <ul style="color:#0077cc; font-weight:500; margin:1.2rem 0 0 1.2rem;">
+                    <li>Smart job matching and recommendations</li>
+                    <li>Easy job posting and applicant management</li>
+                    <li>Real-time analytics for employers and admins</li>
+                    <li>Secure, privacy-focused user experience</li>
+                </ul>
+            </div>
+        </section>
+    <section id="section-categories" class="section" style="background-size: cover; background-position: center;">
+            <div class="section-bg"></div>
+            <div class="section-content">
+                <h2 style="color:#0077cc;margin-top:2rem;">Job Categories</h2>
+                <div class="categories-list">
+                    <a class="category-card" href="job-list-demo.html?category=Technology%20%26%20IT">Technology & IT</a>
+                    <a class="category-card" href="job-list-demo.html?category=Healthcare">Healthcare</a>
+                    <a class="category-card" href="job-list-demo.html?category=Finance%20%26%20Accounting">Finance & Accounting</a>
+                    <a class="category-card" href="job-list-demo.html?category=Education">Education</a>
+                    <a class="category-card" href="job-list-demo.html?category=Engineering">Engineering</a>
+                    <a class="category-card" href="job-list-demo.html?category=Sales%20%26%20Marketing">Sales & Marketing</a>
+                    <a class="category-card" href="job-list-demo.html?category=Customer%20Service">Customer Service</a>
+                    <a class="category-card" href="job-list-demo.html?category=Remote%20%26%20Freelance">Remote & Freelance</a>
+                </div>
+                <p style="margin-top:1.5rem; color:#444;">Browse jobs by category to find your perfect fit, or <a href="register.html" style="color:#0077cc; text-decoration:underline;">register now</a> to get started!</p>
+            </div>
+        </section>
+    <section id="section-postjob" class="section" style="background-size: cover; background-position: center;">
+            <div class="section-bg"></div>
+            <div class="section-content">
+                <h2>Post a Job</h2>
+                <p>Ready to hire top talent? Register as an employer to post jobs and manage applicants with ease.</p>
+                <a href="register.html" class="cta-btn" style="margin-top:1.2rem;">Register as Employer</a>
+            </div>
+        </section>
+        <section id="section-contact" class="section" style="background-image: url('https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=900&q=80'); background-size: cover; background-position: center;">
+            <div class="section-bg"></div>
+            <div class="section-content">
+                <h2>Contact Us</h2>
+                <div class="contact-details">
+                    <p><strong>Email:</strong> support@careerjobconnect.com</p>
+                    <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                    <p><strong>Address:</strong> 123 Career Lane, Suite 100, Job City, Country</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 CareerJobConnect. All rights reserved.</p>
+        <a href="#contact" class="nav-link" data-section="contact" style="color:#0077cc; text-decoration:underline; margin-top:0.5rem; display:inline-block;">Contact</a>
+    </footer>
+        <script>
+        // Unified dynamic background and navigation logic
+        const sectionBackgrounds = {
+            home: [
+                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80',
+                '../assets/image1.jpg',
+                '../assets/image2.jpg',
+                '../assets/image3.jpg',
+                '../assets/image4.jpg',
+                '../assets/image5.jpg',
+                '../assets/image6.jpg',
+                '../assets/image7.jpg',
+            ],
+            about: [
+                'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80',
+                '../assets/image1.jpg',
+                '../assets/image2.jpg',
+                '../assets/image3.jpg',
+            ],
+            categories: [
+                'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80',
+                '../assets/image4.jpg',
+                '../assets/image5.jpg',
+                '../assets/image6.jpg',
+            ],
+            postjob: [
+                'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+                '../assets/image7.jpg',
+                '../assets/image1.jpg',
+            ],
+            contact: [
+                'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=900&q=80',
+                '../assets/image2.jpg',
+                '../assets/image3.jpg',
+            ]
+        };
+        let bgIndexes = { home: 0, about: 0, categories: 0, postjob: 0, contact: 0 };
+        let currentSection = 'home';
+        function setSectionBg(section) {
+            const sec = document.getElementById('section-' + section);
+            if (!sec) return;
+            const imgs = sectionBackgrounds[section];
+            if (!imgs) return;
+            sec.style.backgroundImage = `url('${imgs[bgIndexes[section]]}')`;
+            sec.style.backgroundSize = 'cover';
+            sec.style.backgroundPosition = 'center';
+        }
+        function rotateBg(section) {
+            const imgs = sectionBackgrounds[section];
+            if (!imgs) return;
+            bgIndexes[section] = (bgIndexes[section] + 1) % imgs.length;
+            setSectionBg(section);
+        }
+        // Start rotation for visible section
+        function startBgRotation(section) {
+            setSectionBg(section);
+            if (window.bgInterval) clearInterval(window.bgInterval);
+            window.bgInterval = setInterval(() => rotateBg(section), 6000);
+        }
+        // Navigation logic for smooth section switching
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                if (!section) return;
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById('section-' + section).classList.add('active');
+                currentSection = section;
+                startBgRotation(section);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        // Initial load
+        window.addEventListener('DOMContentLoaded', function() {
+            startBgRotation('home');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+/* Dashboard-specific styles for CareerJobConnect */
+
+.dashboard-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-left: 2rem;
+    color: #0077cc;
+}
+
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 70px);
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    padding: 2rem 1rem;
+    border-radius: 0 12px 12px 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar li {
+    margin-bottom: 1.5rem;
+}
+.sidebar a {
+    color: #222;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05rem;
+    transition: color 0.2s;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: block;
+}
+.sidebar a:hover, .sidebar a.active {
+    color: #fff;
+    background: #0077cc;
+}
+.dashboard-main {
+    margin-left: 240px;
+    padding: 2rem 2rem 2rem 0;
+    min-height: 80vh;
+    background: #f7f9fc;
+}
+section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 2rem;
+    padding: 2rem;
+}
+/* Table Styles */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,119,204,0.04);
+    margin-bottom: 1.5rem;
+}
+th, td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+}
+th {
+    background: #f7f9fc;
+    color: #0077cc;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+}
+tr:not(:last-child) td {
+    border-bottom: 1px solid #e0e0e0;
+}
+tr:hover td {
+    background: #f0f7ff;
+}
+button {
+    background: #0077cc;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+button:hover {
+    background: #005fa3;
+    transform: scale(1.04);
+}
+.dashboard-cards {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+.dashboard-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,119,204,0.07);
+    padding: 1.5rem;
+    min-width: 220px;
+    flex: 1;
+    transition: box-shadow 0.2s, transform 0.1s;
+}
+.dashboard-card:hover {
+    box-shadow: 0 6px 24px rgba(0,119,204,0.13);
+    transform: translateY(-4px) scale(1.03);
+}
+.profile-dropdown button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0077cc;
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.profile-dropdown button:hover {
+    background: #e3f0ff;
+}
+#profileMenu {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,119,204,0.13);
+    padding: 2rem 2rem 1.5rem 2rem;
+    min-width: 340px;
+    z-index: 100;
+    animation: fadeIn 0.4s;
+}
+#profileMenu a, #profileMenu button {
+    font-size: 1rem;
+}
+#profileMenu img, #profileMenu span[style*='background'] {
+    box-shadow: 0 2px 8px rgba(0,119,204,0.08);
+}
+#profileMenu strong {
+    color: #0077cc;
+}
+#profileModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.18);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s;
+}
+#profileModal > div {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,119,204,0.13);
+    padding: 2.5rem 2rem;
+    max-width: 420px;
+    width: 95%;
+    margin: auto;
+    animation: fadeIn 0.4s;
+}
+#profileModal label {
+    color: #0077cc;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+}
+#profileModal input, #profileModal textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: 1.5px solid #c7e0f7;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #f7f9fc;
+    margin-top: 0.2rem;
+    margin-bottom: 0.7rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+#profileModal input:focus, #profileModal textarea:focus {
+    border: 1.5px solid #0077cc;
+    outline: none;
+    box-shadow: 0 0 0 2px #e3f0ff;
+}
+#profileModal button {
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+#profileModal button[type='submit'] {
+    background: #0077cc;
+    color: #fff;
+}
+#profileModal button[type='submit']:hover {
+    background: #005fa3;
+    transform: scale(1.04);
+}
+#profileModal button#cancelEditBtn {
+    background: #888;
+    color: #fff;
+}
+#profileModal button#cancelEditBtn:hover {
+    background: #555;
+}
+/* Logo in dashboard header */
+.dashboard-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0077cc;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+.dashboard-logo svg {
+    width: 38px;
+    height: 38px;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

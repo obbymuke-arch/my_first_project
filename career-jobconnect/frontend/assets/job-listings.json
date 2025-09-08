@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Frontend Developer",
+    "company": "Tech Solutions",
+    "location": "Remote",
+    "category": "Engineering",
+    "salary": 90000,
+    "description": "Build modern web interfaces using HTML, CSS, and JavaScript.",
+    "deadline": "2025-09-30"
+  },
+  {
+    "id": 2,
+    "title": "UI/UX Designer",
+    "company": "Creative Minds",
+    "location": "San Francisco, CA",
+    "category": "Design",
+    "salary": 85000,
+    "description": "Design user-centric interfaces and experiences.",
+    "deadline": "2025-10-10"
+  },
+  {
+    "id": 3,
+    "title": "Product Manager",
+    "company": "Visionary Inc.",
+    "location": "Remote",
+    "category": "Product",
+    "salary": 120000,
+    "description": "Lead product development and strategy.",
+    "deadline": "2025-09-25"
+  }
+]

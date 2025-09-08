@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job List Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="dashboard-logo" style="margin:1.5rem 0 1.5rem 2rem;display:inline-flex;align-items:center;gap:0.7rem;text-decoration:none;">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" height="38" width="38">
+                <rect x="6" y="14" width="32" height="20" rx="6" fill="#0077cc"/>
+                <rect x="12" y="20" width="20" height="8" rx="3" fill="#fff"/>
+                <path d="M14 28c0 2 2 4 4 4h8c2 0 4-2 4-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M18 14v-2a4 4 0 0 1 8 0v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 24c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4 2-4 4-4 2 4 4 4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            CareerJobConnect
+        </a>
+    </header>
+    <main style="max-width:900px;margin:2rem auto 2rem auto;padding:2rem;background:#fff;border-radius:18px;box-shadow:0 2px 12px rgba(0,119,204,0.07);">
+        <h1 id="categoryTitle" style="color:#0077cc;margin-bottom:2rem;text-align:center;font-size:2rem;font-weight:800;"></h1>
+        <div id="jobList"></div>
+    </main>
+    <div id="jobModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:300;align-items:center;justify-content:center;">
+        <div id="jobModalContent" style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;display:flex;flex-direction:column;align-items:center;"></div>
+    </div>
+    <script>
+    // Demo job data
+    const jobs = [
+        { title: 'Frontend Developer', company: 'Acme Corp', category: 'Technology & IT', location: 'Nairobi, Kenya', posted: '2 days ago' },
+        { title: 'Registered Nurse', company: 'HealthPlus', category: 'Healthcare', location: 'Lagos, Nigeria', posted: '1 day ago' },
+        { title: 'Accountant', company: 'FinServe', category: 'Finance & Accounting', location: 'Accra, Ghana', posted: '3 days ago' },
+        { title: 'Math Teacher', company: 'Bright Academy', category: 'Education', location: 'Kampala, Uganda', posted: 'Today' },
+        { title: 'Mechanical Engineer', company: 'BuildTech', category: 'Engineering', location: 'Cairo, Egypt', posted: '4 days ago' },
+        { title: 'Sales Executive', company: 'MarketPro', category: 'Sales & Marketing', location: 'Nairobi, Kenya', posted: 'Today' },
+        { title: 'Customer Support Rep', company: 'HelpDesk', category: 'Customer Service', location: 'Lagos, Nigeria', posted: '2 days ago' },
+        { title: 'Remote Web Designer', company: 'FreelanceHub', category: 'Remote & Freelance', location: 'Remote', posted: 'Today' },
+        { title: 'Backend Developer', company: 'Acme Corp', category: 'Technology & IT', location: 'Nairobi, Kenya', posted: 'Today' },
+        { title: 'Marketing Analyst', company: 'MarketPro', category: 'Sales & Marketing', location: 'Accra, Ghana', posted: 'Yesterday' }
+    ];
+    // Get category from URL
+    function getCategory() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('category');
+    }
+    function isLoggedIn() {
+        return !!localStorage.getItem('cj_logged_in');
+    }
+    function getJobseekerInfo() {
+        // Simulate jobseeker info (in real app, fetch from user profile)
+        return {
+            name: localStorage.getItem('cj_user_name') || 'Demo User',
+            email: localStorage.getItem('cj_user_email') || 'user@email.com',
+            resume: '../assets/mock-resume.pdf'
+        };
+    }
+    function sendApplicationToEmployer(job, cvData, credData) {
+        // Simulate sending application to employer dashboard (store in localStorage)
+        let apps = JSON.parse(localStorage.getItem('cj_applications') || '[]');
+        // Build uploadedFiles array: CV and credentials
+        let uploadedFiles = [];
+        if (cvData && cvData.name && cvData.base64 && cvData.type) {
+            uploadedFiles.push({ name: cvData.name, type: cvData.type, base64: cvData.base64 });
+        }
+        if (Array.isArray(credData)) {
+            credData.forEach(c => {
+                if (c && c.name && c.base64 && c.type) {
+                    uploadedFiles.push({ name: c.name, type: c.type, base64: c.base64 });
+                }
+            });
+        }
+        apps.push({
+            jobTitle: job.title,
+            company: job.company,
+            jobseeker: getJobseekerInfo(),
+            appliedAt: new Date().toISOString(),
+            uploadedFiles
+        });
+        localStorage.setItem('cj_applications', JSON.stringify(apps));
+    }
+    function showJobModal(job) {
+        const modal = document.getElementById('jobModal');
+        const content = document.getElementById('jobModalContent');
+        content.innerHTML = `
+            <h2 style='color:#0077cc;margin-bottom:1rem;'>${job.title}</h2>
+            <div style='color:#444;font-size:1.08rem;margin-bottom:0.7rem;'><strong>Company:</strong> ${job.company}</div>
+            <div style='color:#444;font-size:1.08rem;margin-bottom:0.7rem;'><strong>Location:</strong> ${job.location}</div>
+            <div style='color:#888;font-size:0.98rem;margin-bottom:1.2rem;'><strong>Posted:</strong> ${job.posted}</div>
+            <form id='applyForm' style='width:100%;display:flex;flex-direction:column;gap:1rem;'>
+                <label style='font-weight:500;color:#0077cc;'>Upload CV/Resume (PDF, DOC, DOCX)
+                    <input type='file' id='cvFile' accept='.pdf,.doc,.docx' style='margin-top:0.5rem;'>
+                </label>
+                <label style='font-weight:500;color:#0077cc;'>Upload Credentials (optional)
+                    <input type='file' id='credFile' multiple style='margin-top:0.5rem;'>
+                </label>
+                <button id='confirmApplyBtn' type='submit' style='background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:0.7rem;'>Apply for this Job</button>
+                <button id='closeJobModalBtn' type='button' style='background:#888;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;'>Cancel</button>
+            </form>
+        `;
+        modal.style.display = 'flex';
+        document.getElementById('closeJobModalBtn').onclick = function() {
+            modal.style.display = 'none';
+        };
+        document.getElementById('applyForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const cvInput = document.getElementById('cvFile');
+            const credInput = document.getElementById('credFile');
+            let cvData = null;
+            let credData = [];
+            if (cvInput.files.length > 0) {
+                const file = cvInput.files[0];
+                const base64 = await fileToBase64(file);
+                cvData = { name: file.name, type: file.type, base64 };
+            }
+            for (let i = 0; i < credInput.files.length; i++) {
+                const file = credInput.files[i];
+                const base64 = await fileToBase64(file);
+                credData.push({ name: file.name, type: file.type, base64 });
+            }
+            sendApplicationToEmployer(job, cvData, credData);
+            modal.style.display = 'none';
+            alert('Application submitted successfully!');
+        };
+    }
+    // Helper to convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+    function renderJobs(category) {
+        document.getElementById('categoryTitle').textContent = category ? `Jobs in ${category}` : 'All Jobs';
+        const filtered = category ? jobs.filter(j => j.category === category) : jobs;
+        const jobList = document.getElementById('jobList');
+        if (filtered.length === 0) {
+            jobList.innerHTML = `<div style='color:#d32f2f;text-align:center;font-size:1.2rem;'>No jobs found in this category yet.</div>`;
+            return;
+        }
+        jobList.innerHTML = filtered.map((j, idx) => `
+            <div style="background:#f7f9fc;border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 1px 6px rgba(0,119,204,0.07);display:flex;flex-direction:column;gap:0.5rem;">
+                <div style="font-size:1.2rem;font-weight:700;color:#0077cc;">${j.title}</div>
+                <div style="color:#444;font-size:1.05rem;">${j.company} &mdash; ${j.location}</div>
+                <div style="color:#888;font-size:0.98rem;">Posted: ${j.posted}</div>
+                <button class="apply-btn" data-idx="${idx}" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.7rem;">Apply</button>
+            </div>
+        `).join('');
+        // Add event listeners to Apply buttons
+        document.querySelectorAll('.apply-btn').forEach(btn => {
+            btn.onclick = function() {
+                if (!isLoggedIn()) {
+                    if (confirm('You must be logged in to apply. Would you like to log in or sign up now?')) {
+                        window.location.href = 'login.html';
+                    }
+                } else {
+                    showJobModal(filtered[parseInt(btn.getAttribute('data-idx'))]);
+                }
+            };
+        });
+    }
+    const category = getCategory();
+    renderJobs(category);
+    </script>
+</body>
+</html>
