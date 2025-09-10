@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "subject": "Unable to login",
+    "description": "User reports being unable to login with correct credentials.",
+    "status": "Open",
+    "priority": "High",
+    "createdAt": "2025-09-07T10:15:00Z",
+    "userEmail": "jobseeker1@email.com",
+    "updates": [
+      { "date": "2025-09-07T11:00:00Z", "message": "Ticket received and assigned to support." }
+    ]
+  },
+  {
+    "id": 2,
+    "subject": "Job posting approval delay",
+    "description": "Employer reports that their job posting is pending approval for over 24 hours.",
+    "status": "Open",
+    "priority": "Medium",
+    "createdAt": "2025-09-07T12:30:00Z",
+    "userEmail": "employer1@email.com",
+    "updates": []
+  }
+]

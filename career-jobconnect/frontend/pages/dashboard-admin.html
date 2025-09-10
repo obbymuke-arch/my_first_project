@@ -1,3 +1,25 @@
+    <!-- Ticket Creation Modal -->
+    <div id="ticketModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:300;align-items:center;justify-content:center;overflow:auto;">
+        <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;justify-content:space-between;">
+            <h2 style="color:#0077cc;margin-bottom:1.2rem;">Create Support Ticket</h2>
+            <form id="createTicketForm" style="display:flex;flex-direction:column;gap:1rem;">
+                <label>Subject<input type="text" id="ticketSubject" required></label>
+                <label>User Email<input type="email" id="ticketUserEmail" required></label>
+                <label>Priority
+                    <select id="ticketPriority" required>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </label>
+                <label>Description<textarea id="ticketDescription" rows="3" required></textarea></label>
+                <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                    <button type="button" id="cancelTicketBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Cancel</button>
+                    <button type="submit" id="submitTicketBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +30,46 @@
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-    <!-- Notification Bar -->
+<!-- Notification Bell -->
+<div id="notificationBell" style="position:fixed;top:32px;right:40px;z-index:1100;">
+    <button id="notificationsBtn" style="background:none;border:none;position:relative;cursor:pointer;">
+        <svg width="28" height="28" fill="#0077cc" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16zM4 17l1.29-1.29C5.89 15.11 6 14.56 6 14v-3c0-3.07 1.63-5.64 5-6.32V4a1 1 0 1 1 2 0v.68C16.37 5.36 18 7.92 18 11v3c0 .56.11 1.11.29 1.71L20 17H4z"></path></svg>
+        <span id="notificationCount" style="position:absolute;top:-6px;right:-6px;background:#d32f2f;color:#fff;font-size:0.82rem;padding:2px 7px;border-radius:50%;font-weight:700;display:none;">0</span>
+    </button>
+    <div id="notificationsDropdown" style="display:none;position:absolute;right:0;top:40px;width:350px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.13);padding:1rem 0;z-index:1200;">
+        <div style="font-weight:600;color:#0077cc;padding:0 1.2rem 0.7rem 1.2rem;">Notifications</div>
+        <ul id="notificationsList" style="list-style:none;padding:0 1.2rem 0 1.2rem;max-height:320px;overflow-y:auto;margin:0;"></ul>
+        <div style="padding:0.7rem 1.2rem 0 1.2rem;text-align:right;">
+            <button id="clearNotificationsBtn" style="background:none;color:#d32f2f;border:none;font-size:0.95rem;cursor:pointer;">Clear All</button>
+        </div>
+    </div>
+</div>
+<!-- Profile & Settings Modal -->
+<div id="adminProfileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:2000;align-items:center;justify-content:center;overflow:auto;">
+    <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;justify-content:space-between;">
+        <h2 style="color:#0077cc;margin-bottom:1.2rem;">Admin Profile & Settings</h2>
+        <form id="adminProfileForm" style="display:flex;flex-direction:column;gap:1rem;">
+            <label>Full Name<input type="text" id="adminProfileName" required></label>
+            <label>Email<input type="email" id="adminProfileEmail" required></label>
+            <label>Change Password<input type="password" id="adminProfilePassword"></label>
+            <label>Contact Number<input type="text" id="adminProfileContact"></label>
+            <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                <button type="button" id="cancelAdminProfileBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Cancel</button>
+                <button type="submit" id="saveAdminProfileBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="auditLogModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:2100;align-items:center;justify-content:center;overflow:auto;">
+    <div style="background:#fff;border-radius:18px;box-shadow:0 6px 32px rgba(0,119,204,0.13);padding:2.3rem 2rem 1.7rem 2rem;max-width:520px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;align-items:center;">
+        <h2 style="color:#0077cc;margin-bottom:1.3rem;font-size:1.45rem;text-align:center;font-weight:700;letter-spacing:0.01em;">Audit Logs</h2>
+        <ul id="auditLogList" style="list-style:none;padding:0.5rem 0.2rem 0.5rem 0.2rem;max-height:340px;overflow-y:auto;margin:0 0 1.2rem 0;width:100%;display:flex;flex-direction:column;gap:0.7rem;"></ul>
+        <div style="display:flex;gap:1.2rem;justify-content:center;width:100%;margin-top:0.7rem;">
+            <button type="button" id="closeAuditLogBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.5rem;font-size:1.09rem;font-weight:600;">Close</button>
+        </div>
+    </div>
+</div>
+<!-- Notification Bar -->
     <div id="notificationBar" style="display:none;position:fixed;top:0;left:0;width:100vw;z-index:999;background:#0077cc;color:#fff;padding:1rem 2rem;font-size:1.08rem;font-weight:500;box-shadow:0 2px 12px rgba(0,119,204,0.13);transition:top 0.3s;">
         <span id="notificationMsg"></span>
         <button id="closeNotification" style="background:none;border:none;color:#fff;font-size:1.2rem;font-weight:700;float:right;cursor:pointer;">&times;</button>
@@ -25,40 +86,144 @@
             CareerJobConnect
         </a>
         <div class="profile-dropdown" style="position:relative;">
-            <button id="profileBtn" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:0.7rem;">
-                <span style="background:#0077cc;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;">AD</span>
-                <span style="font-weight:600;color:#0077cc;">Admin</span>
-                <svg width="18" height="18" fill="#0077cc" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0l-4.25-4.39a.75.75 0 0 1 .02-1.06z"/></svg>
-            </button>
-            <div id="profileMenu" style="display:none;position:absolute;right:0;top:48px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,119,204,0.13);padding:2rem 2rem 1.5rem 2rem;min-width:340px;z-index:100;">
-                <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem;">
-                    <img src="../assets/profile-pic.png" alt="Profile Picture" style="width:64px;height:64px;border-radius:50%;object-fit:cover;background:#e3f0ff;">
-                    <div>
-                        <div id="profileName" style="font-size:1.2rem;font-weight:700;color:#0077cc;">Alex Admin</div>
-                        <div id="profileRole" style="color:#555;font-size:1rem;">System Admin</div>
-                        <div id="profileEmail" style="color:#888;font-size:0.98rem;">admin@email.com</div>
-                    </div>
-                </div>
-                <div style="margin-bottom:1rem;"><strong>Contact:</strong> <span id="profileContact">+1 (555) 987-6543</span></div>
-                <div style="margin-bottom:1rem;"><strong>About:</strong><br><span id="profileAbout" style="color:#444;">Dedicated system administrator ensuring platform security and performance.</span></div>
-                <div style="display:flex;gap:1rem;">
-                    <button class="profile-btn" id="settingsBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Settings</button>
-                    <button class="profile-btn" id="logoutBtn" style="background:#d32f2f;color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Log Out</button>
-                </div>
+    <button id="profileBtn" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:0.7rem;">
+        <span style="background:#0077cc;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;">AD</span>
+        <span style="font-weight:600;color:#0077cc;">Alex Admin</span>
+        <svg width="18" height="18" fill="#0077cc" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0l-4.25-4.39a.75.75 0 0 1 .02-1.06z"/></svg>
+    </button>
+    <div id="profileMenu" style="display:none;position:absolute;right:0;top:48px;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2rem 2rem 1.5rem 2rem;min-width:340px;z-index:100;">
+        <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem;">
+            <img src="../assets/profile-pic.png" alt="Profile Picture" style="width:64px;height:64px;border-radius:50%;object-fit:cover;background:#e3f0ff;">
+            <div>
+                <div style="font-size:1.15rem;font-weight:700;color:#0077cc;">Alex Admin</div>
+                <div style="font-size:0.97rem;color:#555;">System Admin</div>
             </div>
         </div>
+        <div style="display:flex;flex-direction:column;gap:0.7rem;margin-top:1.2rem;">
+            <button class="profile-btn" id="openProfileModalBtn" style="background:#e3f2fd;color:#0077cc;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Edit Profile</button>
+            <button class="profile-btn" id="settingsBtn" style="background:#e8f5e9;color:#2e7d32;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Settings</button>
+            <button class="profile-btn" id="openAuditLogBtn" style="background:#fff8e1;color:#ff8f00;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Audit Logs</button>
+            <button class="profile-btn" id="logoutBtn" style="background:#ffebee;color:#d32f2f;border:none;border-radius:8px;padding:0.7rem 1.5rem;font-size:1rem;font-weight:600;cursor:pointer;">Log Out</button>
+        </div>
+    </div>
+</div>
     </header>
+    <style>
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 0;
+            height: calc(100vh - 80px);
+            position: fixed;
+            left: 0;
+            top: 80px;
+            z-index: 90;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            margin: 0;
+        }
+        .sidebar a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .sidebar a:hover {
+            background: #f5f9ff;
+            color: #0077cc;
+        }
+        .sidebar a.active {
+            background: #e6f0ff;
+            color: #0077cc;
+            border-left: 3px solid #0077cc;
+            font-weight: 500;
+        }
+        .dashboard-main {
+            margin-left: 250px;
+            padding: 2rem;
+            padding-top: 100px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-badge.open { background: #e3f2fd; color: #1976d2; }
+        .status-badge.in-progress { background: #fff8e1; color: #ff8f00; }
+        .status-badge.resolved { background: #e8f5e9; color: #2e7d32; }
+        .priority-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .priority-badge.high { background: #ffebee; color: #d32f2f; }
+        .priority-badge.medium { background: #fff8e1; color: #ff8f00; }
+        .priority-badge.low { background: #e8f5e9; color: #2e7d32; }
+        .action-btn {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 0.3rem;
+        }
+        .view-btn {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .resolve-btn {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table th {
+            background: #f5f7fa;
+            font-weight: 600;
+            color: #555;
+        }
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+    </style>
     <aside class="sidebar">
         <ul>
-            <li><a href="#manage-users">Manage Users</a></li>
-            <li><a href="#moderate-jobs">Moderate Jobs</a></li>
-            <li><a href="#reports">Reports & Analytics</a></li>
-            <li><a href="#system-health">System Health</a></li>
+            <li><a href="#dashboard-overview" class="active">Dashboard</a></li>
+<li><a href="#manage-users">Manage Users</a></li>
+<li><a href="#moderate-jobs">Moderate Jobs</a></li>
+<li><a href="#tickets-management">Support Tickets</a></li>
+<li><a href="#reports-analytics">Reports & Analytics</a></li>
+<li><a href="#system-health">System Health</a></li>
+<li><a href="#audit-logs">Audit Logs & Compliance</a></li>
         </ul>
     </aside>
     <div class="dashboard-main">
         <section class="dashboard-title">Admin Dashboard</section>
-        <div class="dashboard-cards" style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;">
+        
+        <!-- Dashboard Overview Section (shown by default) -->
+<section id="dashboard-overview" style="display: block;">
+            <div class="dashboard-cards" style="display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;">
             <div class="dashboard-card" style="flex:1; min-width:220px; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,119,204,0.07); padding:1.5rem;">
                 <h3 style="color:#0077cc; font-size:1.1rem; margin-bottom:0.7rem;">� Users</h3>
                 <div id="usersCount" style="font-size:2.1rem; font-weight:700; color:#222;">0</div>
@@ -74,55 +239,646 @@
                 <div id="applicationsCount" style="font-size:2.1rem; font-weight:700; color:#222;">0</div>
                 <div style="color:#888; font-size:0.98rem;">Total Applications</div>
             </div>
-        </div>
-        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
-            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">User Role Distribution</h3>
-            <canvas id="roleChart" height="80"></canvas>
-        </div>
-        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
-            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">Jobs Posted Over Time</h3>
-            <canvas id="jobsLineChart" height="80"></canvas>
-        </div>
-        <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
-            <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:1rem;">Applications per Job</h3>
-            <canvas id="applicationsBarChart" height="80"></canvas>
-        </div>
-        <section id="manage-users">
-            <h2>Manage Users</h2>
-            <div id="usersFilterBar" style="margin:1.2rem 0 0.5rem 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-                <input id="filterUserName" type="text" placeholder="Filter by Name" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
-                <input id="filterUserEmail" type="text" placeholder="Filter by Email" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
-                <select id="filterUserRole" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:120px;">
-                    <option value="">All Roles</option>
-                    <option value="Job Seeker">Job Seeker</option>
-                    <option value="Employer">Employer</option>
-                    <option value="Admin">Admin</option>
-                </select>
-                <select id="filterUserStatus" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:120px;">
-                    <option value="">All Statuses</option>
-                    <option value="Active">Active</option>
-                    <option value="Suspended">Suspended</option>
-                </select>
-            </div>
-            <div id="usersTableContainer" style="margin-top:1.5rem;"></div>
         </section>
-        <section id="moderate-jobs">
-            <h2>Moderate Job Postings</h2>
-            <div id="jobsFilterBar" style="margin:1.2rem 0 0.5rem 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-                <input id="filterJobTitle" type="text" placeholder="Filter by Title" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
-                <input id="filterJobCompany" type="text" placeholder="Filter by Company" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
-                <input id="filterJobLocation" type="text" placeholder="Filter by Location" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
-                <select id="filterJobStatus" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:120px;">
-                    <option value="">All Statuses</option>
-                    <option value="Active">Active</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Rejected">Rejected</option>
-                </select>
+        
+        <!-- Manage Users Section -->
+<section id="manage-users" style="display: none; margin-top: 2rem;">
+    <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Manage Users</h2>
+    <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+        <div id="usersFilterBar" style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+            <input id="filterUserName" type="text" placeholder="Filter by Name" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
+            <input id="filterUserEmail" type="text" placeholder="Filter by Email" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:160px;">
+            <select id="filterUserRole" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:120px;">
+                <option value="">All Roles</option>
+                <option value="Job Seeker">Job Seeker</option>
+                <option value="Employer">Employer</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <select id="filterUserStatus" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:120px;">
+                <option value="">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Suspended">Suspended</option>
+            </select>
+
+        <!-- Support Tickets Management Section -->
+        <section id="tickets-management" style="display: none; margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Support Tickets</h2>
+        <button id="createTicketBtn" class="primary-btn" style="display: flex; align-items: center; gap: 0.5rem; background: #0077cc; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Create Ticket
+        </button>
+    </div>
+    <div id="ticketsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+                <tr>
+                    <th style="padding:0.7rem 1rem;">Ticket ID</th>
+                    <th style="padding:0.7rem 1rem;">Subject</th>
+                    <th style="padding:0.7rem 1rem;">User</th>
+                    <th style="padding:0.7rem 1rem;">Status</th>
+                    <th style="padding:0.7rem 1rem;">Priority</th>
+                    <th style="padding:0.7rem 1rem;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1001</td>
+                    <td style="padding:0.7rem 1rem;">Login not working</td>
+                    <td style="padding:0.7rem 1rem;">alice@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#ffebee;color:#d32f2f;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">High</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1002</td>
+                    <td style="padding:0.7rem 1rem;">Profile update error</td>
+                    <td style="padding:0.7rem 1rem;">bob@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Resolved</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Medium</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1003</td>
+                    <td style="padding:0.7rem 1rem;">Cannot reset password</td>
+                    <td style="padding:0.7rem 1rem;">eva@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Low</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.305 3 16.4075 3.86683 18 5.29175M21 4V8M21 8H17M3 20V16M3 16H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Refresh
+        </button>
+    </div>
+    <div id="jobsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <table style="width:100%;border-collapse:collapse;">
+        <thead style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+            <tr>
+                <th style="padding:0.7rem 1rem;">Job Title</th>
+                <th style="padding:0.7rem 1rem;">Company</th>
+                <th style="padding:0.7rem 1rem;">Location</th>
+                <th style="padding:0.7rem 1rem;">Status</th>
+                <th style="padding:0.7rem 1rem;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding:0.7rem 1rem;">Frontend Developer</td>
+                <td style="padding:0.7rem 1rem;">TechCorp Inc.</td>
+                <td style="padding:0.7rem 1rem;">San Francisco, CA</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Pending</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Review</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Approve</button> <button style="background:#ffebee;color:#d32f2f;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Reject</button></td>
+            </tr>
+            <tr>
+                <td style="padding:0.7rem 1rem;">UX/UI Designer</td>
+                <td style="padding:0.7rem 1rem;">DesignHub</td>
+                <td style="padding:0.7rem 1rem;">Remote</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Approved</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+            </tr>
+            <tr>
+                <td style="padding:0.7rem 1rem;">Backend Engineer</td>
+                <td style="padding:0.7rem 1rem;">Cloudify</td>
+                <td style="padding:0.7rem 1rem;">New York, NY</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#ffebee;color:#d32f2f;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Rejected</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</section>
+
+<!-- Support Tickets Management Section -->
+<section id="tickets-management" style="display: none; margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Support Tickets</h2>
+        <button id="createTicketBtn" class="primary-btn" style="display: flex; align-items: center; gap: 0.5rem; background: #0077cc; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Create Ticket
+        </button>
+    </div>
+    <div id="ticketsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+                <tr>
+                    <th style="padding:0.7rem 1rem;">Ticket ID</th>
+                    <th style="padding:0.7rem 1rem;">Subject</th>
+                    <th style="padding:0.7rem 1rem;">User</th>
+                    <th style="padding:0.7rem 1rem;">Status</th>
+                    <th style="padding:0.7rem 1rem;">Priority</th>
+                    <th style="padding:0.7rem 1rem;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1001</td>
+                    <td style="padding:0.7rem 1rem;">Login not working</td>
+                    <td style="padding:0.7rem 1rem;">alice@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#ffebee;color:#d32f2f;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">High</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1002</td>
+                    <td style="padding:0.7rem 1rem;">Profile update error</td>
+                    <td style="padding:0.7rem 1rem;">bob@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Resolved</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Medium</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1003</td>
+                    <td style="padding:0.7rem 1rem;">Cannot reset password</td>
+                    <td style="padding:0.7rem 1rem;">eva@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Low</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Support Tickets</h2>
+        <button id="createTicketBtn" class="primary-btn" style="display: flex; align-items: center; gap: 0.5rem; background: #0077cc; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Create Ticket
+        </button>
+    </div>
+    <div id="ticketsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <table style="width:100%;border-collapse:collapse;">
+        <thead style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+            <tr>
+                <th style="padding:0.7rem 1rem;">Ticket ID</th>
+                <th style="padding:0.7rem 1rem;">Subject</th>
+                <th style="padding:0.7rem 1rem;">User</th>
+                <th style="padding:0.7rem 1rem;">Status</th>
+                <th style="padding:0.7rem 1rem;">Priority</th>
+                <th style="padding:0.7rem 1rem;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding:0.7rem 1rem;">#1001</td>
+                <td style="padding:0.7rem 1rem;">Login not working</td>
+                <td style="padding:0.7rem 1rem;">alice@email.com</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#ffebee;color:#d32f2f;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">High</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+            </tr>
+            <tr>
+                <td style="padding:0.7rem 1rem;">#1002</td>
+                <td style="padding:0.7rem 1rem;">Profile update error</td>
+                <td style="padding:0.7rem 1rem;">bob@email.com</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Resolved</span></td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Medium</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+            </tr>
+            <tr>
+                <td style="padding:0.7rem 1rem;">#1003</td>
+                <td style="padding:0.7rem 1rem;">Cannot reset password</td>
+                <td style="padding:0.7rem 1rem;">eva@email.com</td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Low</span></td>
+                <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</section>
+
+<!-- System Health Section -->
+<section id="system-health" style="display: none; margin-top: 2rem;">
+    <h2>System Health</h2>
+    <div id="systemHealthContainer" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;"></div>
+</section>
+
+        
+        <!-- Moderate Jobs Section -->
+        <section id="moderate-jobs" style="display: none; margin-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Job Moderation</h2>
+                <button id="refreshJobsBtn" class="action-btn" style="background: #e3f2fd; color: #1976d2; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.305 3 16.4075 3.86683 18 5.29175M21 4V8M21 8H17M3 20V16M3 16H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Refresh
+                </button>
             </div>
-            <div id="jobsTableContainer" style="margin-top:1.5rem;"></div>
+            
+            <!-- Job Filters -->
+            <div style="background: #fff; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Status</label>
+                        <select id="jobStatusFilter" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Date Posted</label>
+                        <select id="jobDateFilter" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+                            <option value="">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Search</label>
+                        <div style="position: relative;">
+                            <input type="text" id="jobSearchInput" placeholder="Search jobs..." style="width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <svg style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M21 21L16.65 16.65" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+                    <button id="resetFiltersBtn" style="padding: 0.5rem 1rem; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; color: #555;">
+                        Reset Filters
+                    </button>
+                    <button id="applyFiltersBtn" style="padding: 0.5rem 1.5rem; background: #0077cc; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Jobs List -->
+            <div id="jobsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9;">
+                    <div style="font-weight: 600; color: #444;">Job Listings (24)</div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span style="font-size: 0.9rem; color: #666;">Sort by:</span>
+                        <select style="padding: 0.4rem 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #fff; font-size: 0.9rem;">
+                            <option>Newest First</option>
+                            <option>Oldest First</option>
+                            <option>Title (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Job List -->
+                <div id="jobsList" style="max-height: 600px; overflow-y: auto;">
+                    <!-- Job Item 1 -->
+                    <div class="job-item" style="padding: 1.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600; color: #0077cc; margin-bottom: 0.25rem;">Senior Frontend Developer</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">TechCorp Inc. • San Francisco, CA • Full-time</div>
+                            <div style="display: flex; gap: 1rem; font-size: 0.85rem;">
+                                <span>Posted: 2d ago</span>
+                                <span>•</span>
+                                <span>12 applicants</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.75rem;
+                        <span style="background: #fff8e1; color: #ff8f00; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">
+                            Pending Review
+                        </span>
+                        <button class="view-job-btn" data-id="1" style="background: #e3f2fd; color: #1976d2; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                            Review
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Job Item 2 -->
+                <div class="job-item" style="padding: 1.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background-color: #f8fafc;">
+                    <div>
+                        <div style="font-weight: 600; color: #0077cc; margin-bottom: 0.25rem;">UX/UI Designer</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">DesignHub • Remote • Contract</div>
+                        <div style="display: flex; gap: 1rem; font-size: 0.85rem;">
+                            <span>Posted: 1d ago</span>
+                            <span>•</span>
+                            <span>8 applicants</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <span style="background: #e8f5e9; color: #2e7d32; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">
+                            Approved
+                        </span>
+                        <button class="view-job-btn" data-id="2" style="background: #e3f2fd; color: #1976d2; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                            View
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- More job items would go here -->
+                
+            </div>
+            
+            <!-- Pagination -->
+            <div style="padding: 1.5rem; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9;">
+                <div style="font-size: 0.9rem; color: #666;">
+                    Showing <span>1</span> to <span>10</span> of <span>24</span> jobs
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="pagination-btn" data-page="prev" disabled style="padding: 0.4rem 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #f5f5f5; color: #999; cursor: not-allowed;" disabled>
+                        Previous
+                    </button>
+                    <div style="display: flex; gap: 0.25rem;">
+                        <button class="pagination-btn active" data-page="1" style="padding: 0.4rem 0.8rem; border: 1px solid #0077cc; border-radius: 4px; background: #0077cc; color: white; cursor: pointer;">1</button>
+                        <button class="pagination-btn" data-page="2" style="padding: 0.4rem 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer;">2</button>
+                        <button class="pagination-btn" data-page="3" style="padding: 0.4rem 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer;">3</button>
+                        <span style="padding: 0.4rem 0.8rem;">...</span>
+                    </div>
+                    <button class="pagination-btn" data-page="next" style="padding: 0.4rem 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer;">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Job Detail Modal (hidden by default) -->
+        <div id="jobDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 2rem;">
+            <!-- Modal content will be loaded here dynamically -->
+        </div>
+    </section>
+        
+        <!-- Audit Logs & Compliance Section -->
+        <section id="audit-logs" style="display:none; margin-top:2rem;">
+            <h2 style="color:#0077cc; font-size:1.5rem; font-weight:600;">Audit Logs & Compliance</h2>
+            <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+                <div style="display:flex;gap:2rem;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem;">
+                    <div style="flex:1;min-width:220px;">
+                        <label style="font-weight:500;color:#555;">Date</label>
+                        <input type="date" id="auditLogDateFilter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:140px;width:100%;">
+                    </div>
+                    <div style="flex:1;min-width:220px;">
+                        <label style="font-weight:500;color:#555;">User</label>
+                        <input type="text" id="auditLogUserFilter" placeholder="Filter by user" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:140px;width:100%;">
+                    </div>
+                    <div style="flex:1;min-width:220px;">
+                        <label style="font-weight:500;color:#555;">Action</label>
+                        <input type="text" id="auditLogActionFilter" placeholder="Filter by action" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #bbb;min-width:140px;width:100%;">
+                    </div>
+                </div>
+                <div id="auditLogsTableContainer" style="overflow-x:auto;"></div>
+            </div>
+            <div style="background:#f5f7fa;border-radius:12px;padding:1.5rem 1.5rem 1.2rem 1.5rem;box-shadow:0 2px 8px rgba(0,119,204,0.04);max-width:600px;margin:auto;">
+                <h3 style="color:#0077cc;font-size:1.1rem;margin-bottom:0.5rem;">Compliance Notice</h3>
+                <ul style="color:#555;font-size:1.03rem;margin:0 0 0 1.2rem;">
+                    <li>All admin actions are logged for security and compliance.</li>
+                    <li>Logs are retained for 12 months in accordance with company policy.</li>
+                    <li>Access to audit logs is restricted to authorized personnel only.</li>
+                    <li>For legal requests or audits, contact compliance@careerjobconnect.com.</li>
+                </ul>
+            </div>
         </section>
-        <section id="reports">
+        
+        
+<!-- Reports Section -->
+<section id="reports-analytics" style="display: none; margin-top: 2rem;">
             <h2>Reports & Analytics</h2>
+            <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+                <p><strong>Active Users:</strong> 120</p>
+                <p><strong>Jobs Posted:</strong> 45</p>
+                <p><strong>Applications:</strong> 320</p>
+                <p><strong>New Users (7d):</strong> 28</p>
+                <div style="margin-top: 2rem;">
+                    <canvas id="analyticsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <!-- System Health Section -->
+        <section id="system-health" style="display: none; margin-top: 2rem;">
+    <h2>System Health</h2>
+    <div id="systemHealthContainer" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;">
+            <div style="background:#e8f5e9;padding:1.5rem;border-radius:10px;">
+                <h3 style="color:#2e7d32;margin:0 0 0.8rem 0;">API Server</h3>
+                <div style="font-size:1.1rem;">Status: <span style="color:#2e7d32;font-weight:600;">Operational</span></div>
+                <div style="color:#666;">Response Time: 120ms</div>
+                <div style="color:#666;">Uptime: 99.97%</div>
+            </div>
+            <div style="background:#e3f2fd;padding:1.5rem;border-radius:10px;">
+                <h3 style="color:#1565c0;margin:0 0 0.8rem 0;">Database</h3>
+                <div style="font-size:1.1rem;">Status: <span style="color:#2e7d32;font-weight:600;">Connected</span></div>
+                <div style="color:#666;">Active Connections: 5</div>
+                <div style="color:#666;">Size: 245MB / 1GB</div>
+            </div>
+            <div style="background:#fff8e1;padding:1.5rem;border-radius:10px;">
+                <h3 style="color:#ff8f00;margin:0 0 0.8rem 0;">Email Service</h3>
+                <div style="font-size:1.1rem;">Status: <span style="color:#ff8f00;font-weight:600;">Degraded</span></div>
+                <div style="color:#666;">Latency: 800ms</div>
+                <div style="color:#666;">Last Error: 2h ago</div>
+            </div>
+            <div style="background:#f9fbe7;padding:1.5rem;border-radius:10px;">
+                <h3 style="color:#afb42b;margin:0 0 0.8rem 0;">File Storage</h3>
+                <div style="font-size:1.1rem;">Status: <span style="color:#2e7d32;font-weight:600;">Operational</span></div>
+                <div style="color:#666;">Usage: 2.5GB / 10GB</div>
+                <div style="color:#666;">Last Backup: 2025-09-08</div>
+            </div>
+            <div style="background:#f3e5f5;padding:1.5rem;border-radius:10px;">
+                <h3 style="color:#8e24aa;margin:0 0 0.8rem 0;">Cache</h3>
+                <div style="font-size:1.1rem;">Status: <span style="color:#2e7d32;font-weight:600;">Operational</span></div>
+                <div style="color:#666;">Hit Rate: 92%</div>
+                <div style="color:#666;">Evictions: 3 today</div>
+            </div>
+        </div>
+        <div style="margin-top:2.5rem;text-align:center;color:#888;font-size:1rem;">
+            <em>All systems are monitored 24/7. For incident history, see <a href="#" style="color:#0077cc;text-decoration:underline;">system logs</a>.</em>
+        </div>
+    </div>
+</section>
+            <h2>System Health</h2>
+            <div style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,119,204,0.07);padding:2rem 1.5rem 1.5rem 1.5rem;margin-bottom:2rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="color: #2e7d32; margin-top: 0;">Server Status</h3>
+                        <p><strong>Uptime:</strong> <span id="uptime">99.9%</span></p>
+                        <p><strong>Response Time:</strong> <span id="responseTime">128ms</span></p>
+                        <p><strong>Server Load:</strong> <span id="serverLoad">24%</span></p>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="color: #1565c0; margin-top: 0;">Database</h3>
+                        <p><strong>Status:</strong> <span id="dbStatus" style="color: #2e7d32;">● Connected</span></p>
+                        <p><strong>Size:</strong> <span id="dbSize">245MB / 1GB</span></p>
+                        <p><strong>Active Connections:</strong> <span id="activeUsers">42</span></p>
+                    </div>
+                    <div style="background: #fff8e1; padding: 1.5rem; border-radius: 8px;">
+                        <h3 style="color: #ff8f00; margin-top: 0;">Maintenance</h3>
+                        <p><strong>Last Backup:</strong> <span id="lastBackup">2025-09-08</span></p>
+                        <p><strong>Next Maintenance:</strong> 2025-09-15 02:00 AM</p>
+                        <p><strong>System Version:</strong> 2.4.1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Support Tickets Management Section -->
+        <section id="tickets-management" style="display: none; margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Support Tickets</h2>
+        <button id="createTicketBtn" class="primary-btn" style="display: flex; align-items: center; gap: 0.5rem; background: #0077cc; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Create Ticket
+        </button>
+    </div>
+    <div id="ticketsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead style="background:#f7f9fc;color:#0077cc;font-weight:600;">
+                <tr>
+                    <th style="padding:0.7rem 1rem;">Ticket ID</th>
+                    <th style="padding:0.7rem 1rem;">Subject</th>
+                    <th style="padding:0.7rem 1rem;">User</th>
+                    <th style="padding:0.7rem 1rem;">Status</th>
+                    <th style="padding:0.7rem 1rem;">Priority</th>
+                    <th style="padding:0.7rem 1rem;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1001</td>
+                    <td style="padding:0.7rem 1rem;">Login not working</td>
+                    <td style="padding:0.7rem 1rem;">alice@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#ffebee;color:#d32f2f;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">High</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1002</td>
+                    <td style="padding:0.7rem 1rem;">Profile update error</td>
+                    <td style="padding:0.7rem 1rem;">bob@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Resolved</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Medium</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button></td>
+                </tr>
+                <tr>
+                    <td style="padding:0.7rem 1rem;">#1003</td>
+                    <td style="padding:0.7rem 1rem;">Cannot reset password</td>
+                    <td style="padding:0.7rem 1rem;">eva@email.com</td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#fff8e1;color:#ff8f00;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Open</span></td>
+                    <td style="padding:0.7rem 1rem;"><span style="background:#e8f5e9;color:#2e7d32;padding:0.3rem 0.8rem;border-radius:12px;font-size:0.95rem;">Low</span></td>
+                    <td style="padding:0.7rem 1rem;"><button style="background:#e3f2fd;color:#1976d2;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">View</button> <button style="background:#e8f5e9;color:#2e7d32;border:none;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;">Resolve</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: #0077cc; font-size: 1.5rem; font-weight: 600;">Support Tickets</h2>
+                <button id="createTicketBtn" class="primary-btn" style="display: flex; align-items: center; gap: 0.5rem; background: #0077cc; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Create Ticket
+                </button>
+            </div>
+            
+            <!-- Ticket Filters -->
+            <div style="background: #fff; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Status</label>
+                    <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">All Statuses</option>
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Priority</label>
+                    <select style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">All Priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div style="flex: 2; min-width: 250px;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555;">Search</label>
+                    <div style="position: relative;">
+                        <input type="text" placeholder="Search tickets..." style="width: 100%; padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <svg style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 21L16.65 16.65" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tickets List -->
+            <div id="ticketsContainer" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <!-- Tickets will be dynamically loaded here -->
+                <div style="padding: 2rem; text-align: center; color: #888;">
+                    <p>Loading tickets...</p>
+                </div>
+            </div>
+            
+            <!-- Ticket Filters -->
+            <div class="ticket-filters">
+                <div class="form-group">
+                    <label for="searchInput">Search</label>
+                    <input type="text" id="searchInput" placeholder="Search tickets...">
+                </div>
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="priorityFilter">Priority</label>
+                    <select id="priorityFilter">
+                        <option value="">All Priorities</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Tickets Table -->
+            <div id="ticketsTableContainer" class="table-responsive" style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,119,204,0.07); padding: 1.5rem; margin-bottom: 2rem; overflow-x: auto;">
+                <table id="ticketsTable" class="tickets-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Category</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tickets will be dynamically inserted here -->
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #666;">
+                                <div class="spinner" style="border: 3px solid #f3f3f3; border-top: 3px solid #0077cc; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                                <p>Loading tickets...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+                            <h2>Reports & Analytics</h2>
             <div style="background:#f7f9fc;padding:1rem 2rem;border-radius:12px;">
                 <p><strong>Active Users:</strong> 120</p>
                 <p><strong>Jobs Posted:</strong> 45</p>
@@ -130,8 +886,7 @@
                 <p><strong>System Uptime:</strong> 99.98%</p>
             </div>
         </section>
-        <section id="system-health">
-            <h2>System Health Overview</h2>
+                    <h2>System Health Overview</h2>
             <ul>
                 <li>All services operational</li>
                 <li>No critical errors reported</li>
@@ -139,27 +894,32 @@
             </ul>
         </section>
     </div>
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:200;align-items:center;justify-content:center;overflow:auto;">
+        <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;justify-content:space-between;">
+            <h2 style="color:#0077cc;margin-bottom:1.2rem;">Edit Profile</h2>
+{{ ... }}
+        }, 1000);
+    });
+    </script>
+    </div>
     <footer>
         <p>&copy; 2025 CareerJobConnect</p>
     </footer>
-    <!-- Profile Edit Modal -->
-<div id="profileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:200;align-items:center;justify-content:center;overflow:auto;">
-    <div style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,119,204,0.13);padding:2.5rem 2rem;max-width:420px;width:95%;margin:auto;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;justify-content:space-between;">
-        <h2 style="color:#0077cc;margin-bottom:1.2rem;">Edit Profile</h2>
-        <form id="editProfileForm" style="display:flex;flex-direction:column;gap:1rem;">
-            <label>Full Name<input type="text" id="editName" required></label>
-            <label>Role / Position<input type="text" id="editRole" required></label>
-            <label>Email<input type="email" id="editEmail" required></label>
-            <label>Contact Number<input type="text" id="editContact"></label>
-            <label>About<textarea id="editAbout" rows="2" required></textarea></label>
-            <div style="display:flex;gap:1rem;justify-content:flex-end;">
-                <button type="button" id="cancelEditBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Cancel</button>
-                <button type="submit" id="saveProfileBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
     <script src="../js/admin.js"></script>
+            <form id="editProfileForm" style="display:flex;flex-direction:column;gap:1rem;">
+                <label>Full Name<input type="text" id="editName" required></label>
+                <label>Role / Position<input type="text" id="editRole" required></label>
+                <label>Email<input type="email" id="editEmail" required></label>
+                <label>Contact Number<input type="text" id="editContact"></label>
+                <label>About<textarea id="editAbout" rows="2" required></textarea></label>
+                <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                    <button type="button" id="cancelEditBtn" style="background:#888;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Cancel</button>
+                    <button type="submit" id="saveProfileBtn" style="background:#0077cc;color:#fff;border:none;border-radius:8px;padding:0.6rem 1.2rem;font-size:1rem;">Save</button>
+                </div>
+            </form>
+        </div>
+    </div></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     // --- Advanced Analytics: Jobs Over Time & Applications per Job ---
@@ -219,12 +979,12 @@
     <script>
     // --- Analytics Cards and Chart ---
     function updateAnalytics() {
-        let users = [];
-        let jobs = [];
-        let applications = [];
-        try { users = JSON.parse(localStorage.getItem('cj_users_admin') || '[]'); } catch { users = []; }
-        try { jobs = JSON.parse(localStorage.getItem('cj_jobs_admin') || '[]'); } catch { jobs = []; }
-        try { applications = JSON.parse(localStorage.getItem('cj_applications_admin') || '[]'); } catch { applications = []; }
+    let users = [];
+    let jobs = [];
+    let applications = [];
+    try { users = JSON.parse(localStorage.getItem('cj_users') || '[]'); } catch { users = []; }
+    try { jobs = JSON.parse(localStorage.getItem('cj_jobs') || '[]'); } catch { jobs = []; }
+    try { applications = JSON.parse(localStorage.getItem('cj_applications') || '[]'); } catch { applications = []; }
         document.getElementById('usersCount').textContent = users.length;
         document.getElementById('jobsCount').textContent = jobs.length;
         document.getElementById('applicationsCount').textContent = applications.length;
@@ -268,8 +1028,8 @@
     // --- Dynamic Users Table with Filtering ---
     function renderUsers() {
         const container = document.getElementById('usersTableContainer');
-        let users = [];
-        try { users = JSON.parse(localStorage.getItem('cj_users_admin') || '[]'); } catch { users = []; }
+    let users = [];
+    try { users = JSON.parse(localStorage.getItem('cj_users') || '[]'); } catch { users = []; }
         const nameFilter = (document.getElementById('filterUserName') || {}).value?.toLowerCase() || '';
         const emailFilter = (document.getElementById('filterUserEmail') || {}).value?.toLowerCase() || '';
         const roleFilter = (document.getElementById('filterUserRole') || {}).value || '';
@@ -317,9 +1077,16 @@
             btn.onclick = function() {
                 const realIdx = users.findIndex(u => u.email === filtered[idx].email);
                 if (realIdx !== -1) {
-                    users[realIdx].status = 'Suspended';
-                    localStorage.setItem('cj_users_admin', JSON.stringify(users));
-                    renderUsers();
+                    if (users[realIdx].status === 'Suspended') {
+                        showNotification('User is already suspended.');
+                        return;
+                    }
+                    if (confirm('Are you sure you want to suspend this user?')) {
+                        users[realIdx].status = 'Suspended';
+                        localStorage.setItem('cj_users', JSON.stringify(users));
+                        showNotification('User suspended successfully.');
+                        renderUsers();
+                    }
                 }
             };
         });
@@ -327,9 +1094,12 @@
             btn.onclick = function() {
                 const realIdx = users.findIndex(u => u.email === filtered[idx].email);
                 if (realIdx !== -1) {
-                    users.splice(realIdx, 1);
-                    localStorage.setItem('cj_users_admin', JSON.stringify(users));
-                    renderUsers();
+                    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                        users.splice(realIdx, 1);
+                        localStorage.setItem('cj_users', JSON.stringify(users));
+                        showNotification('User deleted successfully.');
+                        renderUsers();
+                    }
                 }
             };
         });
@@ -337,8 +1107,8 @@
     // --- Dynamic Jobs Table with Filtering ---
     function renderJobs() {
         const container = document.getElementById('jobsTableContainer');
-        let jobs = [];
-        try { jobs = JSON.parse(localStorage.getItem('cj_jobs_admin') || '[]'); } catch { jobs = []; }
+    let jobs = [];
+    try { jobs = JSON.parse(localStorage.getItem('cj_jobs') || '[]'); } catch { jobs = []; }
         const titleFilter = (document.getElementById('filterJobTitle') || {}).value?.toLowerCase() || '';
         const companyFilter = (document.getElementById('filterJobCompany') || {}).value?.toLowerCase() || '';
         const locationFilter = (document.getElementById('filterJobLocation') || {}).value?.toLowerCase() || '';
@@ -465,5 +1235,6 @@
         window.location.href = 'login.html';
     });
     </script>
+<script src="../js/audit-logs.js"></script>
 </body>
 </html>
