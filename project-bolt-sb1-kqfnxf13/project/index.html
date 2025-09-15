@@ -584,6 +584,8 @@
                             <button class="tab-btn" data-tab="audit-compliance">Audit & Compliance</button>
                             <button class="tab-btn" data-tab="tickets">Support Tickets</button>
                             <button class="tab-btn" data-tab="manage-users">Manage Users</button>
+                            <button class="tab-btn" data-tab="backup">Backup</button>
+                            <button class="tab-btn" data-tab="drills">Drills</button>
                         </div>
                         <!-- Move System Settings and View Reports to the bottom -->
                         <div class="admin-actions admin-actions-bottom" style="margin-top:2rem; display:flex; gap:1rem; justify-content:flex-end;">
@@ -728,6 +730,56 @@
                             </div>
                             <div class="user-list" id="user-list">
                                 <!-- Dynamically loaded -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="backup">
+                            <div class="section-header">
+                                <h2>Backup</h2>
+                                <button class="btn btn-primary" id="start-backup-btn"><i class="fas fa-database"></i> Start Backup</button>
+                                <button class="btn btn-outline" id="download-backup-btn"><i class="fas fa-download"></i> Download Last Backup</button>
+                            </div>
+                            <div id="backup-status" style="margin-top:1rem;">Last backup: <span id="last-backup-time">Never</span></div>
+                            <div style="margin-top:2rem;">
+                                <h3>Backup Scheduling</h3>
+                                <form id="backup-schedule-form" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                                    <label for="backup-interval">Interval:</label>
+                                    <select id="backup-interval" class="input">
+                                        <option value="none">None</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                    <input type="number" id="custom-interval" class="input" min="1" placeholder="Days" style="display:none;width:80px;">
+                                    <button class="btn btn-secondary" type="submit">Set Schedule</button>
+                                </form>
+                                <div id="next-backup-info" style="margin-top:0.5rem;color:#2563eb;font-weight:500;"></div>
+            <div style="margin-top:2rem;">
+                <h3>Export / Import Backup</h3>
+                <button class="btn btn-outline" id="export-backup-btn"><i class="fas fa-file-export"></i> Export Backup</button>
+                <label class="btn btn-outline" style="margin-left:1rem;cursor:pointer;">
+                    <i class="fas fa-file-import"></i> Import Backup
+                    <input type="file" id="import-backup-input" accept=".bak,.json" style="display:none;">
+                </label>
+            </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="drills">
+                            <div class="section-header">
+                                <h2>Drills</h2>
+                                <button class="btn btn-primary" id="run-drill-btn"><i class="fas fa-bolt"></i> Run Drill</button>
+                            </div>
+                            <div id="drill-history" style="margin-top:1rem;">
+                                <h3>Drill History</h3>
+                                <ul id="drill-history-list"><!-- Drill results will appear here --></ul>
+                <template id="drill-detail-template">
+                    <div>
+                        <h3>Drill Details</h3>
+                        <div><b>Date:</b> <span class="drill-date"></span></div>
+                        <div><b>Status:</b> <span class="drill-status"></span></div>
+                        <div><b>Log:</b></div>
+                        <pre class="drill-log" style="background:#f3f3f3;padding:1em;border-radius:0.5em;max-height:200px;overflow:auto;"></pre>
+                    </div>
+                </template>
                             </div>
                         </div>
                     </div>
@@ -916,6 +968,233 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     // Add User, Post Job, New Ticket (dashboard-actions)
+    // User permissions for backup/drills
+    // Simulate current user role (in real app, get from session/auth)
+    const CURRENT_USER_ROLE = 'Admin'; // Change to 'User', 'Moderator', etc. to test
+    function setBackupDrillPermissions() {
+        const backupTab = document.getElementById('backup');
+        const drillsTab = document.getElementById('drills');
+        if (!backupTab || !drillsTab) return;
+        const backupActions = backupTab.querySelectorAll('#start-backup-btn, #download-backup-btn, #backup-schedule-form, #export-backup-btn, #import-backup-input, label[for="import-backup-input"]');
+        const drillActions = drillsTab.querySelectorAll('#run-drill-btn');
+        if (CURRENT_USER_ROLE !== 'Admin') {
+            backupActions.forEach(el => { if (el) el.style.display = 'none'; });
+            drillActions.forEach(el => { if (el) el.style.display = 'none'; });
+            // Optionally show a message
+            let msg = backupTab.querySelector('.admin-perm-msg');
+            if (!msg) {
+                msg = document.createElement('div');
+                msg.className = 'admin-perm-msg';
+                msg.style.color = 'red';
+                msg.style.marginTop = '2rem';
+                msg.textContent = 'You do not have permission to perform backup actions.';
+                backupTab.appendChild(msg);
+            }
+            let dmsg = drillsTab.querySelector('.admin-perm-msg');
+            if (!dmsg) {
+                dmsg = document.createElement('div');
+                dmsg.className = 'admin-perm-msg';
+                dmsg.style.color = 'red';
+                dmsg.style.marginTop = '2rem';
+                dmsg.textContent = 'You do not have permission to run drills.';
+                drillsTab.appendChild(dmsg);
+            }
+        }
+    }
+    setBackupDrillPermissions();
+    // Backup scheduling logic
+    // Export/Import backup logic
+    const exportBackupBtn = document.getElementById('export-backup-btn');
+    if (exportBackupBtn) exportBackupBtn.onclick = function() {
+        openAdminModal('Export Backup', `
+            <div style='text-align:center;'>
+                <p>Export the current backup file?</p>
+                <button class='btn btn-primary' id='confirm-export-backup'>Export</button>
+            </div>
+        `);
+        setTimeout(() => {
+            const confirmBtn = document.getElementById('confirm-export-backup');
+            if (confirmBtn) confirmBtn.onclick = function() {
+                showToast('Backup exported! (Simulated)');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    const importBackupInput = document.getElementById('import-backup-input');
+    if (importBackupInput) importBackupInput.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        openAdminModal('Import Backup', `
+            <div style='text-align:center;'>
+                <p>Restore from backup file: <b>${file.name}</b>?</p>
+                <button class='btn btn-primary' id='confirm-import-backup'>Restore</button>
+            </div>
+        `);
+        setTimeout(() => {
+            const confirmBtn = document.getElementById('confirm-import-backup');
+            if (confirmBtn) confirmBtn.onclick = function() {
+                showToast('Backup restored! (Simulated)');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    const backupInterval = document.getElementById('backup-interval');
+    const customInterval = document.getElementById('custom-interval');
+    const backupScheduleForm = document.getElementById('backup-schedule-form');
+    const nextBackupInfo = document.getElementById('next-backup-info');
+    let nextBackupDate = null;
+    if (backupInterval && customInterval && backupScheduleForm && nextBackupInfo) {
+        backupInterval.onchange = function() {
+            if (backupInterval.value === 'custom') {
+                customInterval.style.display = '';
+            } else {
+                customInterval.style.display = 'none';
+            }
+        };
+        backupScheduleForm.onsubmit = function(e) {
+            e.preventDefault();
+            let interval = backupInterval.value;
+            let days = 0;
+            if (interval === 'daily') days = 1;
+            else if (interval === 'weekly') days = 7;
+            else if (interval === 'custom') days = parseInt(customInterval.value, 10) || 0;
+            if (interval === 'none' || days <= 0) {
+                nextBackupInfo.textContent = 'Automatic backup is disabled.';
+                nextBackupDate = null;
+                showToast('Backup schedule disabled.');
+                return;
+            }
+            // Calculate next backup date
+            const now = new Date();
+            nextBackupDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+            nextBackupInfo.textContent = `Next backup scheduled for: ${nextBackupDate.toLocaleString()}`;
+            showToast('Backup schedule updated!');
+        };
+    }
+    // Backup feature logic
+    const startBackupBtn = document.getElementById('start-backup-btn');
+    if (startBackupBtn) startBackupBtn.onclick = function() {
+        openAdminModal('Backup', `
+            <div style='text-align:center;'>
+                <p>Start a new backup of all system data?</p>
+                <button class='btn btn-primary' id='confirm-backup'>Start Backup</button>
+                <div id='backup-progress' style='margin-top:1rem;display:none;'>
+                    <div style='width:100%;background:#eee;border-radius:8px;overflow:hidden;'>
+                        <div id='backup-progress-bar' style='width:0%;height:16px;background:#2563eb;transition:width 0.3s;'></div>
+                    </div>
+                    <div id='backup-progress-label' style='margin-top:0.5rem;font-size:0.95em;'>Starting...</div>
+                </div>
+            </div>
+        `);
+        setTimeout(() => {
+            const confirmBtn = document.getElementById('confirm-backup');
+            if (confirmBtn) confirmBtn.onclick = function() {
+                confirmBtn.disabled = true;
+                const progress = document.getElementById('backup-progress');
+                const bar = document.getElementById('backup-progress-bar');
+                const label = document.getElementById('backup-progress-label');
+                progress.style.display = '';
+                let percent = 0;
+                label.textContent = 'Backing up...';
+                const interval = setInterval(() => {
+                    percent += 20;
+                    bar.style.width = percent + '%';
+                    if (percent >= 100) {
+                        clearInterval(interval);
+                        label.textContent = 'Backup complete!';
+                        const now = new Date().toLocaleString();
+                        document.getElementById('last-backup-time').textContent = now;
+                        setTimeout(() => {
+                            showToast('Backup completed!');
+                            closeAdminModal();
+                        }, 800);
+                    }
+                }, 400);
+            };
+        }, 100);
+    };
+    const downloadBackupBtn = document.getElementById('download-backup-btn');
+    if (downloadBackupBtn) downloadBackupBtn.onclick = function() {
+        openAdminModal('Download Backup', `
+            <div style='text-align:center;'>
+                <p>Download the most recent backup file?</p>
+                <button class='btn btn-primary' id='confirm-download-backup'>Download</button>
+            </div>
+        `);
+        setTimeout(() => {
+            const confirmBtn = document.getElementById('confirm-download-backup');
+            if (confirmBtn) confirmBtn.onclick = function() {
+                showToast('Backup download started!');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    // Drills feature logic
+    const runDrillBtn = document.getElementById('run-drill-btn');
+    if (runDrillBtn) runDrillBtn.onclick = function() {
+        openAdminModal('Run Drill', `
+            <div style='text-align:center;'>
+                <p>Run a system drill to test backup and recovery?</p>
+                <button class='btn btn-primary' id='confirm-run-drill'>Run Drill</button>
+                <div id='drill-progress' style='margin-top:1rem;display:none;'>
+                    <div style='width:100%;background:#eee;border-radius:8px;overflow:hidden;'>
+                        <div id='drill-progress-bar' style='width:0%;height:16px;background:#22c55e;transition:width 0.3s;'></div>
+                    </div>
+                    <div id='drill-progress-label' style='margin-top:0.5rem;font-size:0.95em;'>Starting...</div>
+                </div>
+            </div>
+        `);
+        setTimeout(() => {
+            const confirmBtn = document.getElementById('confirm-run-drill');
+            if (confirmBtn) confirmBtn.onclick = function() {
+                confirmBtn.disabled = true;
+                const progress = document.getElementById('drill-progress');
+                const bar = document.getElementById('drill-progress-bar');
+                const label = document.getElementById('drill-progress-label');
+                progress.style.display = '';
+                let percent = 0;
+                label.textContent = 'Running drill...';
+                const interval = setInterval(() => {
+                    percent += 25;
+                    bar.style.width = percent + '%';
+                    if (percent >= 100) {
+                        clearInterval(interval);
+                        label.textContent = 'Drill complete!';
+                        const now = new Date().toLocaleString();
+                        const log = `Backup started...\nBackup completed successfully.\nRecovery test...\nRecovery successful.\nAll systems operational.`;
+                        const id = 'drill-' + Date.now();
+                        const result = `<li data-drill-id="${id}" class="drill-history-item" style="cursor:pointer;">Drill run at <span class='drill-date'>${now}</span>: <span class='drill-status' style='color:green;'>Success</span><span style='display:none;' class='drill-log'>${log}</span></li>`;
+                        const history = document.getElementById('drill-history-list');
+                        if (history) history.insertAdjacentHTML('afterbegin', result);
+                        setTimeout(() => {
+                            showToast('Drill completed successfully!');
+                            closeAdminModal();
+                        }, 800);
+                    }
+                }, 400);
+            };
+        }, 100);
+    };
+    // Drill history click for details
+    const drillHistoryList = document.getElementById('drill-history-list');
+    if (drillHistoryList) {
+        drillHistoryList.onclick = function(e) {
+            const item = e.target.closest('.drill-history-item');
+            if (!item) return;
+            const date = item.querySelector('.drill-date')?.textContent || '';
+            const status = item.querySelector('.drill-status')?.textContent || '';
+            const log = item.querySelector('.drill-log')?.textContent || '';
+            openAdminModal('Drill Details', `
+                <div>
+                    <h3>Drill Details</h3>
+                    <div><b>Date:</b> ${date}</div>
+                    <div><b>Status:</b> <span style='color:${status==="Success"?'green':'red'};'>${status}</span></div>
+                    <div><b>Log:</b></div>
+                    <pre style='background:#f3f3f3;padding:1em;border-radius:0.5em;max-height:200px;overflow:auto;'>${log}</pre>
+                </div>
+            `);
+        };
+    }
     const addUserBtn = document.getElementById('add-user-btn');
     if (addUserBtn) addUserBtn.onclick = function() {
         openAdminModal('Add User', `
