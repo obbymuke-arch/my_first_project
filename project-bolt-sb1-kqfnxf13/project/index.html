@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerJobConnect - Find Your Dream Job</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation (hidden on dashboard/admin panel) -->
+    <nav class="navbar" id="main-navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>CareerJobConnect</h2>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link" data-page="home">Home</a>
+                <a href="#" class="nav-link" data-page="jobs">Jobs</a>
+                <a href="#" class="nav-link" data-page="companies">Companies</a>
+                <a href="#" class="nav-link" data-page="about">About</a>
+                <div class="nav-auth">
+                    <button class="btn btn-outline" data-page="login">Login</button>
+                    <button class="btn btn-primary" data-page="register">Sign Up</button>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div class="page active" id="home-page">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>Find Your Dream Job Today</h1>
+                        <p>Connect with top companies and discover opportunities that match your skills and ambitions.</p>
+                        
+                        <!-- Job Search Form -->
+                        <div class="search-form">
+                            <div class="search-inputs">
+                                <input type="text" id="job-search" placeholder="Job title, keywords, or company">
+                                <input type="text" id="location-search" placeholder="Location">
+                                <button class="btn btn-primary" id="search-btn">Search Jobs</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-jobs">1,250</span>
+                                <span class="stat-label">Active Jobs</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-companies">450</span>
+                                <span class="stat-label">Companies</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-users">15,000</span>
+                                <span class="stat-label">Job Seekers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Jobs Section -->
+            <section class="featured-jobs">
+                <div class="container">
+                    <h2>Featured Jobs</h2>
+                    <div class="jobs-grid" id="featured-jobs-grid">
+                        <!-- Featured jobs will be dynamically loaded here -->
+                    </div>
+                    <div class="section-footer">
+                        <button class="btn btn-outline" data-page="jobs">View All Jobs</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="how-it-works">
+                <div class="container">
+                    <h2>How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <div class="step-icon">1</div>
+                            <h3>Create Profile</h3>
+                            <p>Build your professional profile and upload your resume</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">2</div>
+                            <h3>Search Jobs</h3>
+                            <p>Browse thousands of job opportunities from top companies</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">3</div>
+                            <h3>Apply & Connect</h3>
+                            <p>Apply directly and connect with hiring managers</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">4</div>
+                            <h3>Get Hired</h3>
+                            <p>Land your dream job and start your new career</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Jobs Page -->
+        <div class="page" id="jobs-page">
+            <section class="jobs-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>Find Jobs</h1>
+                        <p>Discover your next career opportunity</p>
+                    </div>
+
+                    <!-- Job Filters -->
+                    <div class="filters-container">
+                        <div class="filters">
+                            <select id="category-filter">
+                                <option value="">All Categories</option>
+                                <option value="technology">Technology</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                            </select>
+                            
+                            <select id="experience-filter">
+                                <option value="">All Experience Levels</option>
+                                <option value="entry">Entry Level</option>
+                                <option value="mid">Mid Level</option>
+                                <option value="senior">Senior Level</option>
+                                <option value="executive">Executive</option>
+                            </select>
+                            
+                            <select id="type-filter">
+                                <option value="">All Job Types</option>
+                                <option value="full-time">Full Time</option>
+                                <option value="part-time">Part Time</option>
+                                <option value="contract">Contract</option>
+                                <option value="remote">Remote</option>
+                            </select>
+                            
+                            <button class="btn btn-outline" id="clear-filters">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- Job Listings -->
+                    <div class="jobs-container">
+                        <div class="jobs-list" id="jobs-list">
+                            <!-- Jobs will be dynamically loaded here -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination" id="pagination">
+                            <!-- Pagination will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Companies Page -->
+        <div class="page" id="companies-page">
+            <section class="companies-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>Top Companies</h1>
+                        <p>Explore companies and their job opportunities</p>
+                    </div>
+
+                    <div class="companies-grid" id="companies-grid">
+                        <!-- Companies will be dynamically loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about-page">
+            <section class="about-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>About CareerJobConnect</h1>
+                        <p>Connecting talent with opportunity</p>
+                    </div>
+
+                    <div class="about-content">
+                        <div class="about-text">
+                            <h2>Our Mission</h2>
+                            <p>We're dedicated to creating meaningful connections between talented professionals and innovative companies. Our platform streamlines the job search process, making it easier for job seekers to find their ideal roles and for employers to discover exceptional talent.</p>
+                            
+                            <h2>What We Offer</h2>
+                            <ul>
+                                <li>Comprehensive job search platform</li>
+                                <li>Advanced matching algorithms</li>
+                                <li>Direct communication with employers</li>
+                                <li>Career development resources</li>
+                                <li>Professional networking opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page -->
+        <div class="page" id="login-page">
+            <section class="auth-section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-form">
+                            <h2>Login to Your Account</h2>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <input type="email" id="login-email" placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="login-password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="remember-me">
+                                        <span>Remember me</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                            </form>
+                            
+                            <div class="auth-footer">
+                                <p>Don't have an account? <a href="#" data-page="register">Sign up here</a></p>
+                                <p><a href="#" id="admin-login">Admin Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Register Page -->
+        <div class="page" id="register-page">
+            <section class="auth-section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-form">
+                            <h2>Create Your Account</h2>
+                            <form id="register-form">
+                                <div class="form-group">
+                                    <input type="text" id="register-name" placeholder="Full Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="register-email" placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="register-password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <select id="register-type" required>
+                                        <option value="">Select Account Type</option>
+                                        <option value="jobseeker">Job Seeker</option>
+                                        <option value="employer">Employer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="terms-agreement" required>
+                                        <span>I agree to the Terms of Service and Privacy Policy</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                            </form>
+                            
+                            <div class="auth-footer">
+                                <p>Already have an account? <a href="#" data-page="login">Login here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div class="page" id="dashboard-page">
+            <div class="dashboard-container">
+                <!-- Dashboard Sidebar -->
+                <aside class="dashboard-sidebar">
+                    <div class="user-profile">
+                        <div class="user-avatar" id="user-avatar">U</div>
+                        <div class="user-info">
+                            <h3 id="user-name">User Name</h3>
+                            <p id="user-role">Job Seeker</p>
+                        </div>
+                    </div>
+                    
+                    <nav class="dashboard-nav">
+                        <a href="#" class="nav-item active" data-section="overview">
+                            <span>Overview</span>
+                        </a>
+                        <a href="#" class="nav-item" data-section="profile">
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="nav-item" data-section="applications">
+                            <span>My Applications</span>
+                        </a>
+                        <a href="#" class="nav-item" data-section="saved-jobs">
+                            <span>Saved Jobs</span>
+                        </a>
+                        <a href="#" class="nav-item employer-only" data-section="post-job">
+                            <span>Post Job</span>
+                        </a>
+                        <a href="#" class="nav-item employer-only" data-section="manage-jobs">
+                            <span>Manage Jobs</span>
+                        </a>
+                        <a href="#" class="nav-item admin-only" data-section="admin">
+                            <span>Admin Panel</span>
+                        </a>
+                        <a href="#" class="nav-item" id="logout-btn">
+                            <span>Logout</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Dashboard Content -->
+                <main class="dashboard-content">
+                    <!-- Overview Section -->
+                    <div class="dashboard-section active" id="overview-section">
+                        <div class="section-header">
+                            <h1>Dashboard Overview</h1>
+                        </div>
+                        
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <h3 id="applied-jobs-count">0</h3>
+                                <p>Applications Sent</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="saved-jobs-count">0</h3>
+                                <p>Saved Jobs</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="profile-views">0</h3>
+                                <p>Profile Views</p>
+                            </div>
+                            <div class="stat-card employer-only">
+                                <h3 id="posted-jobs-count">0</h3>
+                                <p>Jobs Posted</p>
+                            </div>
+                        </div>
+
+                        <div class="recent-activity">
+                            <h2>Recent Activity</h2>
+                            <div class="activity-list" id="activity-list">
+                                <!-- Activities will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div class="dashboard-section" id="profile-section">
+                        <div class="section-header">
+                            <h1>My Profile</h1>
+                        </div>
+                        
+                        <form class="profile-form" id="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profile-name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="profile-email">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" id="profile-phone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="profile-location">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Professional Title</label>
+                                <input type="text" id="profile-title">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Bio</label>
+                                <textarea id="profile-bio" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Skills (comma separated)</label>
+                                <input type="text" id="profile-skills">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Applications Section -->
+                    <div class="dashboard-section" id="applications-section">
+                        <div class="section-header">
+                            <h1>My Applications</h1>
+                        </div>
+                        
+                        <div class="applications-list" id="applications-list">
+                            <!-- Applications will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Saved Jobs Section -->
+                    <div class="dashboard-section" id="saved-jobs-section">
+                        <div class="section-header">
+                            <h1>Saved Jobs</h1>
+                        </div>
+                        
+                        <div class="saved-jobs-list" id="saved-jobs-list">
+                            <!-- Saved jobs will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Post Job Section (Employer Only) -->
+                    <div class="dashboard-section" id="post-job-section">
+                        <div class="section-header">
+                            <h1>Post New Job</h1>
+                        </div>
+                        
+                        <form class="job-form" id="job-form">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <input type="text" id="job-title" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Company Name</label>
+                                    <input type="text" id="job-company" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="job-location" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="job-category" required>
+                                        <option value="">Select Category</option>
+                                        <option value="technology">Technology</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="design">Design</option>
+                                        <option value="sales">Sales</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="healthcare">Healthcare</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Job Type</label>
+                                    <select id="job-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="full-time">Full Time</option>
+                                        <option value="part-time">Part Time</option>
+                                        <option value="contract">Contract</option>
+                                        <option value="remote">Remote</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Experience Level</label>
+                                    <select id="job-experience" required>
+                                        <option value="">Select Level</option>
+                                        <option value="entry">Entry Level</option>
+                                        <option value="mid">Mid Level</option>
+                                        <option value="senior">Senior Level</option>
+                                        <option value="executive">Executive</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary Range</label>
+                                    <input type="text" id="job-salary" placeholder="e.g., $50,000 - $70,000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Job Description</label>
+                                <textarea id="job-description" rows="6" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Requirements</label>
+                                <textarea id="job-requirements" rows="4" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Post Job</button>
+                        </form>
+                    </div>
+
+                    <!-- Manage Jobs Section (Employer Only) -->
+                    <div class="dashboard-section" id="manage-jobs-section">
+                        <div class="section-header">
+                            <h1>Manage Jobs</h1>
+                        </div>
+                        
+                        <div class="manage-jobs-list" id="manage-jobs-list">
+                            <!-- Posted jobs will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Admin Panel Section -->
+                    <div class="dashboard-section" id="admin-section">
+                        <h2>Admin Panel</h2>
+                        <p>Welcome to the admin dashboard. Use the navigation below to manage different sections of the site.</p>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: #e3f2fd;">
+                                    <i class="fas fa-users" style="color: #1976d2;"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="total-users">2,456</div>
+                                    <div class="stat-label">Total Users</div>
+                                </div>
+                                <div class="stat-trend positive">+12% from last month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: #e8f5e9;">
+                                    <i class="fas fa-briefcase" style="color: #388e3c;"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="active-jobs">1,234</div>
+                                    <div class="stat-label">Active Jobs</div>
+                                </div>
+                                <div class="stat-trend positive">+8% from last month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: #fff3e0;">
+                                    <i class="fas fa-building" style="color: #f57c00;"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="total-companies">156</div>
+                                    <div class="stat-label">Companies</div>
+                                </div>
+                                <div class="stat-trend negative">-2% from last month</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: #f3e5f5;">
+                                    <i class="fas fa-chart-line" style="color: #8e24aa;"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="revenue">$45,231</div>
+                                    <div class="stat-label">Revenue</div>
+                                </div>
+                                <div class="stat-trend positive">+23% from last month</div>
+                            </div>
+                        </div>
+                        <div class="admin-tabs">
+                            <button class="tab-btn active" data-tab="job-moderation">Job Moderation</button>
+                            <button class="tab-btn" data-tab="system-health">System Health</button>
+                            <button class="tab-btn" data-tab="audit-compliance">Audit & Compliance</button>
+                            <button class="tab-btn" data-tab="tickets">Support Tickets</button>
+                            <button class="tab-btn" data-tab="manage-users">Manage Users</button>
+                        </div>
+                        <!-- Move System Settings and View Reports to the bottom -->
+                        <div class="admin-actions admin-actions-bottom" style="margin-top:2rem; display:flex; gap:1rem; justify-content:flex-end;">
+                        <!-- Toast Notification -->
+                        <div id="admin-toast" style="display:none;position:fixed;bottom:2rem;right:2rem;z-index:3000;background:var(--primary);color:#fff;padding:1rem 2rem;border-radius:0.75rem;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:opacity 0.3s;opacity:0;">Success!</div>
+                            <button class="btn btn-secondary" id="view-reports-btn">View Reports</button>
+                            <button class="btn btn-outline" id="system-settings-btn">System Settings</button>
+                        <!-- Modal Structure for Reports and Settings -->
+                        <div class="modal" id="admin-modal" style="display:none;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 id="admin-modal-title">Modal Title</h2>
+                                    <button class="modal-close" id="admin-close-modal">&times;</button>
+                                </div>
+                                <div class="modal-body" id="admin-modal-body">
+                                    <!-- Dynamic content here -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="tab-content active" id="job-moderation">
+                            <div class="section-header">
+                                <h2>Job Moderation Queue</h2>
+                                <div class="header-actions">
+                                    <select class="filter-select" id="job-moderation-filter">
+                                        <option value="all">All Jobs</option>
+                                        <option value="pending">Pending Review</option>
+                                        <option value="reported">Reported</option>
+                                        <option value="approved">Approved</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="moderation-queue" id="moderation-queue">
+                                <!-- Dynamically loaded -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="system-health">
+                            <div class="health-metrics">
+                                <div class="health-metric">
+                                    <div class="health-icon" style="background: #e3f2fd;">
+                                        <i class="fas fa-server" style="color: #2196f3;"></i>
+                                    </div>
+                                    <div class="health-info">
+                                        <h3>Server Status</h3>
+                                        <div class="health-status online">Online</div>
+                                        <div class="health-detail">Response Time: <span id="response-time">124ms</span></div>
+                                    </div>
+                                </div>
+                                <div class="health-metric">
+                                    <div class="health-icon" style="background: #e8f5e9;">
+                                        <i class="fas fa-database" style="color: #4caf50;"></i>
+                                    </div>
+                                    <div class="health-info">
+                                        <h3>Database</h3>
+                                        <div class="health-status online">Stable</div>
+                                        <div class="health-detail">Queries: <span id="query-count">1,234/s</span></div>
+                                    </div>
+                                </div>
+                                <div class="health-metric">
+                                    <div class="health-icon" style="background: #fff3e0;">
+                                        <i class="fas fa-shield-alt" style="color: #ff9800;"></i>
+                                    </div>
+                                    <div class="health-info">
+                                        <h3>Security</h3>
+                                        <div class="health-status warning">Warning</div>
+                                        <div class="health-detail">Threats: <span id="threat-count">2 detected</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="system-logs">
+                                <h3>Recent Logs</h3>
+                                <div class="log-entries" id="system-logs">
+                                    <!-- Dynamically loaded -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="audit-compliance">
+                            <div class="compliance-stats">
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: #f3e5f5;">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-value" id="compliance-score">98%</div>
+                                        <div class="stat-label">Compliance Score</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background: #e8f5e9;">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-value" id="policies-met">24/25</div>
+                                        <div class="stat-label">Policies Met</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="audit-trail">
+                                <h3>Audit Trail</h3>
+                                <div class="audit-filters">
+                                    <select class="filter-select" id="audit-filter">
+                                        <option value="all">All Activities</option>
+                                        <option value="user">User Actions</option>
+                                        <option value="system">System Events</option>
+                                        <option value="security">Security Events</option>
+                                    </select>
+                                    <input type="date" class="date-filter" id="audit-date">
+                                </div>
+                                <div class="audit-entries" id="audit-entries">
+                                    <!-- Dynamically loaded -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="tickets">
+                            <div class="ticket-filters">
+                                <div class="filter-group">
+                                    <select class="filter-select" id="ticket-status">
+                                        <option value="all">All Tickets</option>
+                                        <option value="open">Open</option>
+                                        <option value="in-progress">In Progress</option>
+                                        <option value="resolved">Resolved</option>
+                                    </select>
+                                    <select class="filter-select" id="ticket-priority">
+                                        <option value="all">All Priorities</option>
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" id="new-ticket-btn">
+                                    <i class="fas fa-plus"></i> New Ticket
+                                </button>
+                            </div>
+                            <div class="ticket-list" id="ticket-list">
+                                <!-- Dynamically loaded -->
+                            </div>
+                        </div>
+                        <div class="tab-content" id="manage-users">
+                            <div class="section-header">
+                                <h2>Manage Users</h2>
+                                <button class="btn btn-primary" id="add-user-btn"><i class="fas fa-user-plus"></i> Add User</button>
+                            </div>
+                            <div class="user-list" id="user-list">
+                                <!-- Dynamically loaded -->
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Job Detail Modal -->
+        <div class="modal" id="job-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-job-title">Job Title</h2>
+                    <button class="modal-close" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="job-info">
+                        <div class="job-meta">
+                            <span class="company" id="modal-company">Company</span>
+                            <span class="location" id="modal-location">Location</span>
+                            <span class="job-type" id="modal-type">Type</span>
+                            <span class="salary" id="modal-salary">Salary</span>
+                        </div>
+                        <div class="job-description">
+                            <h3>Job Description</h3>
+                            <p id="modal-description"></p>
+                        </div>
+                        <div class="job-requirements">
+                            <h3>Requirements</h3>
+                            <p id="modal-requirements"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="save-job">Save Job</button>
+                    <button class="btn btn-primary" id="apply-job">Apply Now</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+<script>
+// Modal logic for View Reports and System Settings
+document.addEventListener('DOMContentLoaded', function() {
+    // Admin Tabs Functionality
+    const adminTabs = document.querySelectorAll('.admin-tabs .tab-btn');
+    const adminTabContents = document.querySelectorAll('.tab-content');
+    adminTabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            adminTabs.forEach(b => b.classList.remove('active'));
+            adminTabContents.forEach(tc => tc.classList.remove('active'));
+            btn.classList.add('active');
+            const tab = btn.getAttribute('data-tab');
+            const content = document.getElementById(tab);
+            if (content) content.classList.add('active');
+        });
+    });
+
+    // Job Moderation Actions
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.job-actions .btn')) {
+            const btn = e.target.closest('.btn');
+            let action = btn.textContent.trim();
+            let jobItem = btn.closest('.job-item');
+            let jobTitle = jobItem?.querySelector('.job-title')?.textContent || '';
+            if (action === 'Reject') {
+                openAdminModal('Reject Job', `Are you sure you want to reject <b>${jobTitle}</b>?<br><br><button class='btn btn-danger' id='confirm-reject'>Reject</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-reject');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        jobItem.remove();
+                        showToast('Job rejected!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'Approve') {
+                openAdminModal('Approve Job', `Approve <b>${jobTitle}</b>?<br><br><button class='btn btn-primary' id='confirm-approve'>Approve</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-approve');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        jobItem.querySelector('.job-status').textContent = 'Approved';
+                        jobItem.querySelector('.job-status').className = 'job-status status-approved';
+                        showToast('Job approved!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'Review') {
+                openAdminModal('Review Job', `Reviewing <b>${jobTitle}</b>.<br><br><button class='btn btn-primary' onclick='document.getElementById(\'admin-close-modal\').click()'>OK</button>`);
+            }
+        }
+    });
+    // Ticket Actions
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.ticket-actions .btn')) {
+            const btn = e.target.closest('.btn');
+            let action = btn.textContent.trim();
+            let ticketItem = btn.closest('.ticket-item');
+            let ticketTitle = ticketItem?.querySelector('.ticket-title')?.textContent || '';
+            if (action === 'Close') {
+                openAdminModal('Close Ticket', `Are you sure you want to close <b>${ticketTitle}</b>?<br><br><button class='btn btn-danger' id='confirm-close-ticket'>Close</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-close-ticket');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        ticketItem.remove();
+                        showToast('Ticket closed!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'Assign') {
+                openAdminModal('Assign Ticket', `Assign <b>${ticketTitle}</b> to another agent?<br><br><button class='btn btn-primary' id='confirm-assign-ticket'>Assign</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-assign-ticket');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        showToast('Ticket assigned!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'View') {
+                openAdminModal('View Ticket', `Viewing <b>${ticketTitle}</b>.<br><br><button class='btn btn-primary' onclick='document.getElementById(\'admin-close-modal\').click()'>OK</button>`);
+            }
+        }
+    });
+    // User Actions
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.user-actions .btn')) {
+            const btn = e.target.closest('.btn');
+            let action = btn.textContent.trim();
+            let userItem = btn.closest('.user-item');
+            let userName = userItem?.querySelector('.user-name')?.textContent || '';
+            let userEmail = userItem?.querySelector('.user-email')?.textContent || '';
+            let userRole = userItem?.querySelector('.user-role')?.textContent || 'User';
+            if (action === 'Edit') {
+                openAdminModal('Edit User', `
+                    <form id='edit-user-form'>
+                        <input type='text' id='edit-user-name' value='${userName}' class='input' required><br>
+                        <input type='email' id='edit-user-email' value='${userEmail}' class='input' required><br>
+                        <select id='edit-user-role' class='input' required>
+                            <option value='User' ${userRole==='User'?'selected':''}>User</option>
+                            <option value='Admin' ${userRole==='Admin'?'selected':''}>Admin</option>
+                            <option value='Moderator' ${userRole==='Moderator'?'selected':''}>Moderator</option>
+                            <option value='Support' ${userRole==='Support'?'selected':''}>Support</option>
+                        </select><br>
+                        <button class='btn btn-primary' type='submit' style='margin-top:1rem;'>Save</button>
+                    </form>
+                `);
+                setTimeout(() => {
+                    const form = document.getElementById('edit-user-form');
+                    if (form) form.onsubmit = function(ev) {
+                        ev.preventDefault();
+                        const newName = document.getElementById('edit-user-name').value.trim();
+                        const newEmail = document.getElementById('edit-user-email').value.trim();
+                        const newRole = document.getElementById('edit-user-role').value;
+                        if (!newName || !newEmail || !newRole) {
+                            showToast('Please fill in all fields.');
+                            return;
+                        }
+                        userItem.querySelector('.user-name').textContent = newName;
+                        userItem.querySelector('.user-email').textContent = newEmail;
+                        userItem.querySelector('.user-role').textContent = newRole;
+                        showToast('User updated!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'Suspend') {
+                openAdminModal('Suspend User', `Are you sure you want to suspend <b>${userName}</b>?<br><br><button class='btn btn-danger' id='confirm-suspend'>Suspend</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-suspend');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        userItem.querySelector('.user-status').textContent = 'Suspended';
+                        userItem.querySelector('.user-status').className = 'user-status status-suspended';
+                        showToast('User suspended!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            } else if (action === 'Reset Password') {
+                openAdminModal('Reset Password', `Reset password for <b>${userName}</b>?<br><br><button class='btn btn-primary' id='confirm-reset'>Reset</button> <button class='btn btn-outline' onclick='document.getElementById(\'admin-close-modal\').click()'>Cancel</button>`);
+                setTimeout(() => {
+                    const confirmBtn = document.getElementById('confirm-reset');
+                    if (confirmBtn) confirmBtn.onclick = function() {
+                        showToast('Password reset!');
+                        closeAdminModal();
+                    };
+                }, 100);
+            }
+        }
+    });
+    // Add User, Post Job, New Ticket (dashboard-actions)
+    const addUserBtn = document.getElementById('add-user-btn');
+    if (addUserBtn) addUserBtn.onclick = function() {
+        openAdminModal('Add User', `
+            <form id='add-user-form'>
+                <input type="text" id="add-user-name" placeholder="Name" class="input" required><br>
+                <input type="email" id="add-user-email" placeholder="Email" class="input" required><br>
+                <select id="add-user-role" class="input" required>
+                    <option value="User" selected>User</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Moderator">Moderator</option>
+                    <option value="Support">Support</option>
+                </select><br>
+                <button class="btn btn-primary" type="submit" style="margin-top:1rem;">Add</button>
+            </form>
+        `);
+        setTimeout(() => {
+            const form = document.getElementById('add-user-form');
+            if (form) form.onsubmit = function(e) {
+                e.preventDefault();
+                const name = document.getElementById('add-user-name').value.trim();
+                const email = document.getElementById('add-user-email').value.trim();
+                const role = document.getElementById('add-user-role').value;
+                if (!name || !email || !role) {
+                    showToast('Please fill in all fields.');
+                    return;
+                }
+                // Add user to the user list dynamically
+                const userList = document.getElementById('user-list');
+                if (userList) {
+                    const div = document.createElement('div');
+                    div.className = 'user-item';
+                    div.innerHTML = `
+                        <div class="user-info">
+                            <span class="user-name">${name}</span>
+                            <span class="user-email">${email}</span>
+                            <span class="user-role">${role}</span>
+                            <span class="user-status status-active">Active</span>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-outline btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Suspend</button>
+                            <button class="btn btn-primary btn-sm">Reset Password</button>
+                        </div>
+                    `;
+                    userList.prepend(div);
+                }
+                showToast('User added!');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    const postJobAction = document.getElementById('post-job-action');
+    if (postJobAction) postJobAction.onclick = function() {
+        openAdminModal('Post Job', `
+            <form id='post-job-form'>
+                <input type="text" id="post-job-title" placeholder="Job Title" class="input" required><br>
+                <input type="text" id="post-job-company" placeholder="Company" class="input" required><br>
+                <button class="btn btn-secondary" type="submit" style="margin-top:1rem;">Post</button>
+            </form>
+        `);
+        setTimeout(() => {
+            const form = document.getElementById('post-job-form');
+            if (form) form.onsubmit = function(e) {
+                e.preventDefault();
+                const title = document.getElementById('post-job-title').value.trim();
+                const company = document.getElementById('post-job-company').value.trim();
+                if (!title || !company) {
+                    showToast('Please fill in all fields.');
+                    return;
+                }
+                // Add job to the moderation queue dynamically
+                const queue = document.getElementById('moderation-queue');
+                if (queue) {
+                    const div = document.createElement('div');
+                    div.className = 'job-item';
+                    div.innerHTML = `
+                        <div class="job-title">${title} <span class="company">@${company}</span></div>
+                        <div class="job-status status-pending">Pending</div>
+                        <div class="job-actions">
+                            <button class="btn btn-outline btn-sm">Review</button>
+                            <button class="btn btn-primary btn-sm">Approve</button>
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </div>
+                        <div class="job-meta">Reported: <b>No</b></div>
+                    `;
+                    queue.prepend(div);
+                }
+                showToast('Job posted!');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    const newTicketAction = document.getElementById('new-ticket-action');
+    if (newTicketAction) newTicketAction.onclick = function() {
+        openAdminModal('New Ticket', `
+            <form id='new-ticket-form'>
+                <input type="text" id="ticket-subject" placeholder="Subject" class="input" required><br>
+                <textarea id="ticket-desc" placeholder="Describe the issue..." class="input" required></textarea><br>
+                <button class="btn btn-outline" type="submit" style="margin-top:1rem;">Submit</button>
+            </form>
+        `);
+        setTimeout(() => {
+            const form = document.getElementById('new-ticket-form');
+            if (form) form.onsubmit = function(e) {
+                e.preventDefault();
+                const subject = document.getElementById('ticket-subject').value.trim();
+                const desc = document.getElementById('ticket-desc').value.trim();
+                if (!subject || !desc) {
+                    showToast('Please fill in all fields.');
+                    return;
+                }
+                // Add ticket to the ticket list dynamically
+                const ticketList = document.getElementById('ticket-list');
+                if (ticketList) {
+                    const div = document.createElement('div');
+                    div.className = 'ticket-item';
+                    div.innerHTML = `
+                        <div class="ticket-header">
+                            <h3 class="ticket-title">${subject}</h3>
+                            <span class="ticket-priority priority-medium">Medium</span>
+                        </div>
+                        <div class="ticket-meta">
+                            <span class="ticket-status"><span class="status-dot status-open"></span>Open</span>
+                            <span>•</span>
+                            <span>Created just now</span>
+                            <span>•</span>
+                            <span>Assigned to Admin</span>
+                        </div>
+                        <div class="ticket-actions">
+                            <button class="btn btn-outline btn-sm">View</button>
+                            <button class="btn btn-primary btn-sm">Assign</button>
+                            <button class="btn btn-danger btn-sm">Close</button>
+                        </div>
+                    `;
+                    ticketList.prepend(div);
+                }
+                showToast('Ticket submitted!');
+                closeAdminModal();
+            };
+        }, 100);
+    };
+    function openAdminModal(title, body) {
+        const modal = document.getElementById('admin-modal');
+        document.getElementById('admin-modal-title').textContent = title;
+        document.getElementById('admin-modal-body').innerHTML = body;
+        modal.style.display = 'flex';
+        setTimeout(() => { modal.classList.add('show'); }, 10);
+        // Focus trap
+        const focusable = modal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+        if (focusable.length) focusable[0].focus();
+        document.body.style.overflow = 'hidden';
+    }
+    function closeAdminModal() {
+        const modal = document.getElementById('admin-modal');
+        modal.classList.remove('show');
+        setTimeout(() => { modal.style.display = 'none'; }, 200);
+        document.body.style.overflow = '';
+    }
+    document.getElementById('admin-close-modal').onclick = closeAdminModal;
+    document.getElementById('view-reports-btn').onclick = function() {
+        openAdminModal('Reports', `
+            <h3>System Reports</h3>
+            <ul>
+                <li>User Growth: <b>+12% this month</b></li>
+                <li>Active Jobs: <b>1,234</b></li>
+                <li>Revenue: <b>$45,231</b></li>
+                <li>Tickets Resolved: <b>87%</b></li>
+            </ul>
+            <button class='btn btn-primary' id='download-report' style='margin-top:1rem;'>Download Full Report</button>
+        `);
+        setTimeout(() => {
+            const btn = document.getElementById('download-report');
+            if (btn) btn.onclick = function() {
+                showToast('Report downloaded!');
+            };
+        }, 100);
+    };
+    document.getElementById('system-settings-btn').onclick = function() {
+        openAdminModal('System Settings', `
+            <h3>Settings</h3>
+            <label style='display:block;margin-bottom:0.5rem;'>
+                <span>Enable Notifications</span>
+                <input type='checkbox' checked style='margin-left:1rem;'>
+            </label>
+            <label style='display:block;margin-bottom:0.5rem;'>
+                <span>Maintenance Mode</span>
+                <input type='checkbox' style='margin-left:1rem;'>
+            </label>
+            <button class='btn btn-primary' id='save-settings' style='margin-top:1rem;'>Save Settings</button>
+        `);
+        setTimeout(() => {
+            const btn = document.getElementById('save-settings');
+            if (btn) btn.onclick = function() {
+                showToast('Settings saved!');
+            };
+        }, 100);
+    };
+    // Close modal on outside click
+    window.onclick = function(event) {
+        var modal = document.getElementById('admin-modal');
+        if (event.target === modal) {
+            closeAdminModal();
+        }
+    };
+    // ESC to close modal
+    document.addEventListener('keydown', function(e) {
+        const modal = document.getElementById('admin-modal');
+        if (modal.style.display !== 'none' && (e.key === 'Escape' || e.key === 'Esc')) {
+            closeAdminModal();
+        }
+    });
+    // Toast logic
+    function showToast(msg) {
+        const toast = document.getElementById('admin-toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.opacity = 1; }, 10);
+        setTimeout(() => {
+            toast.style.opacity = 0;
+            setTimeout(() => { toast.style.display = 'none'; }, 300);
+        }, 2000);
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+    // Notification dropdown
+    const notifBtn = document.getElementById('notif-btn');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    notifBtn && notifBtn.addEventListener('click', function(e) {
+        notifDropdown.classList.toggle('show');
+        e.stopPropagation();
+    });
+    // Profile dropdown
+    const profileBtn = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    profileBtn && profileBtn.addEventListener('click', function(e) {
+        profileDropdown.classList.toggle('show');
+        e.stopPropagation();
+    });
+    // Close dropdowns on click outside
+    document.addEventListener('click', function() {
+        notifDropdown && notifDropdown.classList.remove('show');
+        profileDropdown && profileDropdown.classList.remove('show');
+    });
+    // Modal actions
+    function openModal(title, body) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-body').innerHTML = body;
+        document.getElementById('dashboard-modal').style.display = 'block';
+    }
+    function closeModal() {
+        document.getElementById('dashboard-modal').style.display = 'none';
+    }
+    document.getElementById('close-modal').onclick = closeModal;
+    document.getElementById('add-user-action').onclick = function() {
+        openModal('Add User', '<input type="text" placeholder="Name" class="input"><br><input type="email" placeholder="Email" class="input"><br><button class="btn btn-primary" style="margin-top:1rem;">Add</button>');
+    };
+    document.getElementById('post-job-action').onclick = function() {
+        openModal('Post Job', '<input type="text" placeholder="Job Title" class="input"><br><input type="text" placeholder="Company" class="input"><br><button class="btn btn-secondary" style="margin-top:1rem;">Post</button>');
+    };
+    document.getElementById('new-ticket-action').onclick = function() {
+        openModal('New Ticket', '<input type="text" placeholder="Subject" class="input"><br><textarea placeholder="Describe the issue..." class="input"></textarea><br><button class="btn btn-outline" style="margin-top:1rem;">Submit</button>');
+    };
+    // Chart.js example
+    if (window.Chart) {
+        var ctx = document.getElementById('dashboard-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Active Users',
+                    data: [120, 190, 300, 250, 220, 310, 400],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37,99,235,0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+});
+</script>
+</main>
+<script>
+// Hide navbar on dashboard/admin panel
+document.addEventListener('DOMContentLoaded', function() {
+    function hideNavbarOnDashboard() {
+        var navbar = document.getElementById('main-navbar');
+        var dashboardPage = document.getElementById('dashboard-page');
+        if (!navbar || !dashboardPage) return;
+        // Observe dashboard page visibility
+        var observer = new MutationObserver(function() {
+            if (dashboardPage.classList.contains('active')) {
+                navbar.style.display = 'none';
+            } else {
+                navbar.style.display = '';
+            }
+        });
+        observer.observe(dashboardPage, { attributes: true, attributeFilter: ['class'] });
+        // Initial check
+        if (dashboardPage.classList.contains('active')) {
+            navbar.style.display = 'none';
+        }
+    }
+    hideNavbarOnDashboard();
+});
+</script>
+</body>
+</html>
