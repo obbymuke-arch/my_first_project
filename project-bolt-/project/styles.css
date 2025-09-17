@@ -1,3 +1,77 @@
+/* --- Enhanced Backup & Drill UX --- */
+.backup-section {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.06);
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+}
+.backup-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.backup-section h3::before {
+    content: "\1F4BE";
+    font-size: 1.6rem;
+    vertical-align: middle;
+}
+.backup-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.backup-actions .btn {
+    min-width: 120px;
+    font-size: 0.95rem;
+}
+.backup-table {
+    background: var(--gray-50);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.04);
+}
+.backup-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.backup-table th, .backup-table td {
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid var(--gray-100);
+    text-align: left;
+}
+.backup-table th {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1rem;
+}
+.backup-table tr:last-child td {
+    border-bottom: none;
+}
+.backup-table td .btn {
+    margin-right: 0.5rem;
+}
+.badge-success {
+    background: var(--success);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 0.25em 0.8em;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+.badge-warning {
+    background: var(--warning);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 0.25em 0.8em;
+    font-size: 0.85em;
+    font-weight: 600;
+}
 /* --- Enhanced Admin Panel Tabs & Content --- */
 .admin-tabs {
     display: flex;

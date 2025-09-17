@@ -1,3 +1,549 @@
+// --- Content Moderation Advanced Features ---
+const moderationData = [
+    {
+        id: 'C-2001',
+        user: 'John Smith',
+        type: 'Comment',
+        status: 'Flagged',
+        reported: '2025-09-16',
+        details: 'Inappropriate language in comment.'
+    },
+    {
+        id: 'C-2002',
+        user: 'Jane Doe',
+        type: 'Post',
+        status: 'Approved',
+        reported: '2025-09-15',
+        details: 'Post reviewed and approved.'
+    },
+    {
+        id: 'C-2003',
+        user: 'Alice Johnson',
+        type: 'Image',
+        status: 'Rejected',
+        reported: '2025-09-14',
+        details: 'Image contained prohibited content.'
+    },
+    {
+        id: 'C-2004',
+        user: 'Bob Lee',
+        type: 'Comment',
+        status: 'Flagged',
+        reported: '2025-09-13',
+        details: 'Spam detected in comment.'
+    },
+    {
+        id: 'C-2005',
+        user: 'Chris Evans',
+        type: 'Video',
+        status: 'Flagged',
+        reported: '2025-09-12',
+        details: 'Video under review for copyright.'
+    },
+    {
+        id: 'C-2006',
+        user: 'Dana White',
+        type: 'Post',
+        status: 'Approved',
+        reported: '2025-09-11',
+        details: 'Post approved after manual review.'
+    },
+    {
+        id: 'C-2007',
+        user: 'Eve Black',
+        type: 'Image',
+        status: 'Rejected',
+        reported: '2025-09-10',
+        details: 'Image violated guidelines.'
+    }
+];
+
+function renderModerationTable() {
+    const tbody = document.getElementById('moderation-table-body');
+    if (!tbody) return;
+    const search = (document.getElementById('admin-moderation-search')?.value || '').toLowerCase();
+    const status = document.getElementById('admin-moderation-status-filter')?.value || '';
+    let filtered = moderationData.filter(item => {
+        let match = true;
+        if (search) {
+            match = (
+                item.user.toLowerCase().includes(search) ||
+                item.type.toLowerCase().includes(search) ||
+                item.id.toLowerCase().includes(search)
+            );
+        }
+        if (status && item.status !== status) match = false;
+        return match;
+    });
+    tbody.innerHTML = filtered.map(item => `
+        <tr>
+            <td><input type="checkbox" class="admin-moderation-checkbox" value="${item.id}"></td>
+            <td>#${item.id}</td>
+            <td>${item.user}</td>
+            <td>${item.type}</td>
+            <td><span class="badge badge-${item.status === 'Flagged' ? 'warning' : item.status === 'Approved' ? 'success' : 'error'}">${item.status}</span></td>
+            <td>${item.reported}</td>
+            <td>
+                <button class="btn btn-outline btn-sm" onclick="approveContent('${item.id}')">Approve</button>
+                <button class="btn btn-outline btn-sm" onclick="rejectContent('${item.id}')">Reject</button>
+                <button class="btn btn-outline btn-sm" onclick="openModerationDetailModal('${item.id}')">View</button>
+            </td>
+        </tr>
+    `).join('');
+    updateModerationAnalytics(filtered);
+}
+
+function updateModerationAnalytics(filtered) {
+    // Update analytics summary cards
+    const flagged = filtered.filter(x => x.status === 'Flagged').length;
+    const approved = filtered.filter(x => x.status === 'Approved').length;
+    const rejected = filtered.filter(x => x.status === 'Rejected').length;
+    const analytics = document.querySelector('.moderation-analytics-summary');
+    if (analytics) {
+        analytics.children[0].querySelector('div').textContent = flagged;
+        analytics.children[1].querySelector('div').textContent = approved;
+        analytics.children[2].querySelector('div').textContent = rejected;
+    }
+}
+
+function approveContent(id) {
+    const item = moderationData.find(x => x.id === id);
+    if (item) item.status = 'Approved';
+    renderModerationTable();
+    showNotification('Content approved.');
+}
+function rejectContent(id) {
+    const item = moderationData.find(x => x.id === id);
+    if (item) item.status = 'Rejected';
+    renderModerationTable();
+    showNotification('Content rejected.');
+}
+function openModerationDetailModal(id) {
+    const item = moderationData.find(x => x.id === id);
+    if (!item) return;
+    const modal = document.getElementById('moderation-detail-modal');
+    const body = document.getElementById('moderation-detail-body');
+    if (body) {
+        body.innerHTML = `
+            <div><b>Content ID:</b> #${item.id}</div>
+            <div><b>User:</b> ${item.user}</div>
+            <div><b>Type:</b> ${item.type}</div>
+            <div><b>Status:</b> ${item.status}</div>
+            <div><b>Reported:</b> ${item.reported}</div>
+            <div><b>Details:</b> ${item.details}</div>
+        `;
+    }
+    if (modal) modal.style.display = 'block';
+}
+function closeModerationDetailModal() {
+    const modal = document.getElementById('moderation-detail-modal');
+    if (modal) modal.style.display = 'none';
+}
+function exportModerationCSV() {
+    let rows = [
+        ['Content ID', 'User', 'Type', 'Status', 'Reported', 'Details']
+    ];
+    const search = (document.getElementById('admin-moderation-search')?.value || '').toLowerCase();
+    const status = document.getElementById('admin-moderation-status-filter')?.value || '';
+    let filtered = moderationData.filter(item => {
+        let match = true;
+        if (search) {
+            match = (
+                item.user.toLowerCase().includes(search) ||
+                item.type.toLowerCase().includes(search) ||
+                item.id.toLowerCase().includes(search)
+            );
+        }
+        if (status && item.status !== status) match = false;
+        return match;
+    });
+    filtered.forEach(item => {
+        rows.push([
+            item.id,
+            item.user,
+            item.type,
+            item.status,
+            item.reported,
+            item.details
+        ]);
+    });
+    let csvContent = rows.map(e => e.map(x => '"'+x.replace(/"/g,'""')+'"').join(",")).join("\n");
+    let blob = new Blob([csvContent], { type: 'text/csv' });
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = 'moderation.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+function getSelectedModerationIds() {
+    return Array.from(document.querySelectorAll('.admin-moderation-checkbox:checked')).map(cb => cb.value);
+}
+function bulkApproveContent() {
+    const ids = getSelectedModerationIds();
+    ids.forEach(id => {
+        const item = moderationData.find(x => x.id === id);
+        if (item) item.status = 'Approved';
+    });
+    renderModerationTable();
+    showNotification('Selected content approved.');
+}
+function bulkRejectContent() {
+    const ids = getSelectedModerationIds();
+    ids.forEach(id => {
+        const item = moderationData.find(x => x.id === id);
+        if (item) item.status = 'Rejected';
+    });
+    renderModerationTable();
+    showNotification('Selected content rejected.');
+}
+function bulkDeleteContent() {
+    const ids = getSelectedModerationIds();
+    for (let i = moderationData.length - 1; i >= 0; i--) {
+        if (ids.includes(moderationData[i].id)) moderationData.splice(i, 1);
+    }
+    renderModerationTable();
+    showNotification('Selected content deleted.');
+}
+function toggleSelectAllModeration(checkbox) {
+    document.querySelectorAll('.admin-moderation-checkbox').forEach(cb => {
+        cb.checked = checkbox.checked;
+    });
+}
+
+// Event listeners for search/filter
+document.addEventListener('DOMContentLoaded', function() {
+    const search = document.getElementById('admin-moderation-search');
+    const filter = document.getElementById('admin-moderation-status-filter');
+    if (search) search.addEventListener('input', renderModerationTable);
+    if (filter) filter.addEventListener('change', renderModerationTable);
+    renderModerationTable();
+});
+
+// Expose functions for inline HTML event handlers
+window.approveContent = approveContent;
+window.rejectContent = rejectContent;
+window.openModerationDetailModal = openModerationDetailModal;
+window.closeModerationDetailModal = closeModerationDetailModal;
+window.exportModerationCSV = exportModerationCSV;
+window.bulkApproveContent = bulkApproveContent;
+window.bulkRejectContent = bulkRejectContent;
+window.bulkDeleteContent = bulkDeleteContent;
+window.toggleSelectAllModeration = toggleSelectAllModeration;
+// --- Audit Logs Analytics Pie Chart ---
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('audit-pie-chart');
+    if (canvas && canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        // Demo: 1 success, 1 deleted
+        const data = [1, 1];
+        const colors = ['#10b981', '#ef4444'];
+        let total = data.reduce((a, b) => a + b, 0);
+        let start = 0;
+        data.forEach((val, i) => {
+            const angle = (val / total) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(60, 60);
+            ctx.arc(60, 60, 55, start, start + angle);
+            ctx.closePath();
+            ctx.fillStyle = colors[i];
+            ctx.fill();
+            start += angle;
+        });
+    }
+});
+// --- Audit Logs & Compliance Advanced Features ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Audit log search/filter
+    const search = document.getElementById('admin-audit-search');
+    const statusFilter = document.getElementById('admin-audit-status-filter');
+    if (search) search.addEventListener('input', filterAuditLogsTable);
+    if (statusFilter) statusFilter.addEventListener('change', filterAuditLogsTable);
+});
+
+function filterAuditLogsTable() {
+    const search = document.getElementById('admin-audit-search').value.toLowerCase();
+    const status = document.getElementById('admin-audit-status-filter').value;
+    document.querySelectorAll('#audit-table-body tr').forEach(row => {
+        const user = row.children[2]?.textContent.toLowerCase();
+        const action = row.children[3]?.textContent.toLowerCase();
+        const stat = row.children[4]?.textContent;
+        let show = true;
+        if (search && !(user.includes(search) || action.includes(search))) show = false;
+        if (status && !stat.includes(status)) show = false;
+        row.style.display = show ? '' : 'none';
+    });
+}
+
+function exportAuditLogsCSV() {
+    let csv = 'Timestamp,User,Action,Status\n';
+    document.querySelectorAll('#audit-table-body tr').forEach(row => {
+        const t = row.children[1]?.textContent;
+        const u = row.children[2]?.textContent;
+        const a = row.children[3]?.textContent;
+        const s = row.children[4]?.textContent;
+        csv += `"${t}","${u}","${a}","${s}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'audit-logs.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function getSelectedAuditLogIds() {
+    return Array.from(document.querySelectorAll('.admin-audit-checkbox:checked')).map(cb => cb.value);
+}
+
+function bulkDeleteAuditLogs() {
+    const ids = getSelectedAuditLogIds();
+    if (!ids.length) return showNotification('No logs selected.', 'warning');
+    if (!confirm('Are you sure you want to delete selected logs?')) return;
+    document.querySelectorAll('#audit-table-body tr').forEach(row => {
+        if (ids.includes(row.querySelector('.admin-audit-checkbox').value)) row.remove();
+    });
+    showNotification('Selected logs deleted.', 'success');
+}
+
+function toggleSelectAllAuditLogs(checkbox) {
+    document.querySelectorAll('.admin-audit-checkbox').forEach(cb => { cb.checked = checkbox.checked; });
+}
+
+function openAuditLogDetailModal(id) {
+    const modal = document.getElementById('audit-log-detail-modal');
+    const body = document.getElementById('audit-log-detail-body');
+    if (!modal || !body) return;
+    // For demo, use static data. In real app, fetch from storage/server.
+    const logs = {
+        1: { timestamp: '2025-09-17 10:15', user: 'Jane Doe', action: 'User Login', status: 'Success', details: 'User successfully logged in from IP 192.168.1.10.' },
+        2: { timestamp: '2025-09-17 10:20', user: 'Admin', action: 'Deleted Job #5', status: 'Deleted', details: 'Admin deleted job posting #5. Action performed from dashboard.' }
+    };
+    const log = logs[id];
+    if (!log) return;
+    body.innerHTML = `
+        <div style="margin-bottom:0.75rem;"><strong>Timestamp:</strong> ${log.timestamp}</div>
+        <div style="margin-bottom:0.75rem;"><strong>User:</strong> ${log.user}</div>
+        <div style="margin-bottom:0.75rem;"><strong>Action:</strong> ${log.action}</div>
+        <div style="margin-bottom:0.75rem;"><strong>Status:</strong> <span class="badge badge-${log.status === 'Success' ? 'success' : 'error'}">${log.status}</span></div>
+        <div style="margin-bottom:0.75rem;"><strong>Details:</strong> ${log.details}</div>
+    `;
+    modal.classList.add('active');
+}
+function closeAuditLogDetailModal() {
+    document.getElementById('audit-log-detail-modal').classList.remove('active');
+}
+
+function openComplianceChecklistModal() {
+    document.getElementById('compliance-checklist-modal').classList.add('active');
+}
+function closeComplianceChecklistModal() {
+    document.getElementById('compliance-checklist-modal').classList.remove('active');
+}
+
+window.exportAuditLogsCSV = exportAuditLogsCSV;
+window.bulkDeleteAuditLogs = bulkDeleteAuditLogs;
+window.toggleSelectAllAuditLogs = toggleSelectAllAuditLogs;
+window.openAuditLogDetailModal = openAuditLogDetailModal;
+window.closeAuditLogDetailModal = closeAuditLogDetailModal;
+window.openComplianceChecklistModal = openComplianceChecklistModal;
+window.closeComplianceChecklistModal = closeComplianceChecklistModal;
+// --- Backup & Drill: History, Restore Simulation, Notifications ---
+function openBackupHistoryModal() {
+    const modal = document.getElementById('backup-history-modal');
+    const list = document.getElementById('backup-history-list');
+    if (!modal || !list) return;
+    // For demo, use static data. In real app, fetch from storage/server.
+    const backups = [
+        { date: '2025-09-17 09:00', type: 'Full Backup', status: 'Completed', details: 'Backup completed successfully.' },
+        { date: '2025-09-16 15:30', type: 'Drill', status: 'In Progress', details: 'Drill is running.' },
+        { date: '2025-09-15 12:00', type: 'Full Backup', status: 'Completed', details: 'Backup completed successfully.' }
+    ];
+    list.innerHTML = backups.map(b => `
+        <div style="padding:0.75rem 0;border-bottom:1px solid #e5e7eb;">
+            <strong>${b.date}</strong> &mdash; <span style="color:var(--primary);font-weight:500;">${b.type}</span> &mdash; <span class="badge badge-${b.status === 'Completed' ? 'success' : 'warning'}">${b.status}</span><br>
+            <span style="font-size:0.95em;color:var(--gray-600);">${b.details}</span>
+        </div>
+    `).join('');
+    modal.classList.add('active');
+}
+function closeBackupHistoryModal() {
+    document.getElementById('backup-history-modal').classList.remove('active');
+}
+
+function restoreBackup(date) {
+    // Show restore simulation modal and progress
+    const modal = document.getElementById('restore-sim-modal');
+    const bar = document.getElementById('restore-progress-bar');
+    const inner = document.getElementById('restore-progress-inner');
+    const label = document.getElementById('restore-progress-label');
+    if (!modal || !bar || !inner || !label) return;
+    modal.classList.add('active');
+    inner.style.width = '0%';
+    label.textContent = 'Restoring backup...';
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 25 + 15;
+        if (progress >= 100) {
+            inner.style.width = '100%';
+            label.textContent = 'Restore completed!';
+            setTimeout(() => { modal.classList.remove('active'); }, 1200);
+            showNotification(`Backup from ${date} restored successfully!`, 'success');
+            clearInterval(interval);
+        } else {
+            inner.style.width = Math.min(progress, 100) + '%';
+        }
+    }, 400);
+}
+
+window.openBackupHistoryModal = openBackupHistoryModal;
+window.closeBackupHistoryModal = closeBackupHistoryModal;
+window.restoreBackup = restoreBackup;
+// --- Backup & Drill Advanced Features ---
+function showScheduleBackupModal() {
+    document.getElementById('schedule-backup-modal').classList.add('active');
+}
+function closeScheduleBackupModal() {
+    document.getElementById('schedule-backup-modal').classList.remove('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    // Schedule backup form
+    const scheduleForm = document.getElementById('schedule-backup-form');
+    if (scheduleForm) {
+        scheduleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const dt = document.getElementById('schedule-backup-datetime').value;
+            const type = document.getElementById('schedule-backup-type').value;
+            showNotification(`Backup scheduled for ${new Date(dt).toLocaleString()} (${type})`, 'success');
+            closeScheduleBackupModal();
+        });
+    }
+    // Backup table filtering
+    const typeFilter = document.getElementById('backup-type-filter');
+    const statusFilter = document.getElementById('backup-status-filter');
+    if (typeFilter) typeFilter.addEventListener('change', filterBackupTable);
+    if (statusFilter) statusFilter.addEventListener('change', filterBackupTable);
+});
+
+function filterBackupTable() {
+    const type = document.getElementById('backup-type-filter').value;
+    const status = document.getElementById('backup-status-filter').value;
+    document.querySelectorAll('#backup-table-body tr').forEach(row => {
+        const t = row.children[1]?.textContent;
+        const s = row.children[2]?.textContent;
+        let show = true;
+        if (type && t !== type) show = false;
+        if (status && !s.includes(status)) show = false;
+        row.style.display = show ? '' : 'none';
+    });
+}
+
+// Simulate backup progress bar (for demo)
+function showBackupProgress(label = 'Running backup...') {
+    const bar = document.getElementById('backup-progress-bar');
+    const inner = document.getElementById('backup-progress-inner');
+    const text = document.getElementById('backup-progress-label');
+    if (!bar || !inner || !text) return;
+    bar.style.display = '';
+    inner.style.width = '0%';
+    text.textContent = label;
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 20 + 10;
+        if (progress >= 100) {
+            inner.style.width = '100%';
+            text.textContent = 'Backup completed!';
+            setTimeout(() => { bar.style.display = 'none'; }, 1200);
+            clearInterval(interval);
+        } else {
+            inner.style.width = Math.min(progress, 100) + '%';
+        }
+    }, 400);
+}
+
+// Demo: show progress bar when running backup/drill
+window.runBackup = function() { showBackupProgress('Running backup...'); showNotification('Backup started successfully!', 'success'); };
+window.runDrill = function() { showBackupProgress('Running drill...'); showNotification('Drill started!', 'success'); };
+window.showScheduleBackupModal = showScheduleBackupModal;
+window.closeScheduleBackupModal = closeScheduleBackupModal;
+// Add Job Modal Logic
+function openAddJobModal() {
+    document.getElementById('add-job-modal').classList.add('active');
+}
+function closeAddJobModal() {
+    document.getElementById('add-job-modal').classList.remove('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const addJobForm = document.getElementById('add-job-form');
+    if (addJobForm) {
+        addJobForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const job = {
+                id: jobs.length + 1,
+                title: document.getElementById('add-job-title').value,
+                company: document.getElementById('add-job-company').value,
+                location: document.getElementById('add-job-location').value,
+                category: document.getElementById('add-job-category').value,
+                type: document.getElementById('add-job-type').value,
+                salary: document.getElementById('add-job-salary').value,
+                description: document.getElementById('add-job-description').value,
+                requirements: document.getElementById('add-job-requirements').value,
+                posted: new Date(),
+                featured: false,
+                status: 'active',
+                experience: 'mid'
+            };
+            jobs.push(job);
+            localStorage.setItem('jobs', JSON.stringify(jobs));
+            showNotification('Job added successfully!', 'success');
+            closeAddJobModal();
+            renderJobsTable && renderJobsTable();
+            renderAllJobs && renderAllJobs();
+        });
+    }
+});
+window.openAddJobModal = openAddJobModal;
+window.closeAddJobModal = closeAddJobModal;
+// Add User Modal Logic
+function openAddUserModal() {
+    document.getElementById('add-user-modal').classList.add('active');
+}
+function closeAddUserModal() {
+    document.getElementById('add-user-modal').classList.remove('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const addUserForm = document.getElementById('add-user-form');
+    if (addUserForm) {
+        addUserForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('add-user-name').value;
+            const email = document.getElementById('add-user-email').value;
+            const type = document.getElementById('add-user-type').value;
+            if (users.find(u => u.email === email)) {
+                showNotification('Email already exists', 'error');
+                return;
+            }
+            const user = {
+                id: users.length + 1,
+                name,
+                email,
+                type,
+                joined: new Date(),
+                status: 'active'
+            };
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            showNotification('User added successfully!', 'success');
+            closeAddUserModal();
+            renderUsersTable && renderUsersTable();
+            updateAdminStats && updateAdminStats();
+        });
+    }
+});
+window.openAddUserModal = openAddUserModal;
+window.closeAddUserModal = closeAddUserModal;
 // --- Backup & Drill Tab Handlers ---
 function runBackup() {
     showNotification('Backup started successfully!', 'success');
@@ -1136,28 +1682,221 @@ function updateAdminStats() {
 
 function renderUsersTable() {
     const tbody = document.getElementById('users-table-body');
-    tbody.innerHTML = users.map(user => `
+    // Get filter/search values
+    const search = document.getElementById('admin-user-search')?.value?.toLowerCase() || '';
+    const typeFilter = document.getElementById('admin-user-type-filter')?.value || '';
+    let filteredUsers = users.filter(u => {
+        const matchesSearch = !search || u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search);
+        const matchesType = !typeFilter || u.type === typeFilter;
+        return matchesSearch && matchesType;
+    });
+    tbody.innerHTML = filteredUsers.map(user => `
         <tr>
+            <td><input type="checkbox" class="admin-user-checkbox" value="${user.id}"></td>
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.type.charAt(0).toUpperCase() + user.type.slice(1)}</td>
             <td>${new Date(user.joined).toLocaleDateString()}</td>
             <td>
                 <div class="table-actions">
-                    <button class="btn btn-outline" onclick="toggleUserStatus(${user.id})">
+                    <button class="btn btn-outline btn-sm" onclick="viewUserDetails(${user.id})">View</button>
+                    <button class="btn btn-outline btn-sm" onclick="openEditUserModal(${user.id})">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleUserStatus(${user.id})">
                         ${user.status === 'active' ? 'Deactivate' : 'Activate'}
                     </button>
-                    <button class="btn btn-outline" onclick="deleteUser(${user.id})">Delete</button>
+                    <button class="btn btn-outline btn-sm" onclick="deleteUser(${user.id})">Delete</button>
                 </div>
             </td>
         </tr>
     `).join('');
+// Edit user modal logic
+function openEditUserModal(userId) {
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+    document.getElementById('edit-user-id').value = user.id;
+    document.getElementById('edit-user-name').value = user.name;
+    document.getElementById('edit-user-email').value = user.email;
+    document.getElementById('edit-user-type').value = user.type;
+    document.getElementById('edit-user-status').value = user.status;
+    document.getElementById('edit-user-modal').classList.add('active');
+}
+function closeEditUserModal() {
+    document.getElementById('edit-user-modal').classList.remove('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const editUserForm = document.getElementById('edit-user-form');
+    if (editUserForm) {
+        editUserForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-user-id').value);
+            const name = document.getElementById('edit-user-name').value;
+            const email = document.getElementById('edit-user-email').value;
+            const type = document.getElementById('edit-user-type').value;
+            const status = document.getElementById('edit-user-status').value;
+            const user = users.find(u => u.id === id);
+            if (user) {
+                user.name = name;
+                user.email = email;
+                user.type = type;
+                user.status = status;
+                localStorage.setItem('users', JSON.stringify(users));
+                renderUsersTable();
+                updateAdminStats && updateAdminStats();
+                showNotification('User updated successfully!', 'success');
+                closeEditUserModal();
+            }
+        });
+    }
+});
+window.openEditUserModal = openEditUserModal;
+window.closeEditUserModal = closeEditUserModal;
+// Admin user tab: search, filter, export, bulk actions, select all, view details
+document.addEventListener('DOMContentLoaded', function() {
+    const search = document.getElementById('admin-user-search');
+    const typeFilter = document.getElementById('admin-user-type-filter');
+    if (search) search.addEventListener('input', renderUsersTable);
+    if (typeFilter) typeFilter.addEventListener('change', renderUsersTable);
+});
+
+function exportUsersCSV() {
+    let csv = 'Name,Email,Type,Joined,Status\n';
+    users.forEach(u => {
+        csv += `"${u.name}","${u.email}","${u.type}","${new Date(u.joined).toLocaleDateString()}","${u.status}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'users.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function getSelectedUserIds() {
+    return Array.from(document.querySelectorAll('.admin-user-checkbox:checked')).map(cb => parseInt(cb.value));
+}
+
+function bulkDeactivateUsers() {
+    const ids = getSelectedUserIds();
+    if (!ids.length) return showNotification('No users selected.', 'warning');
+    users.forEach(u => { if (ids.includes(u.id)) u.status = 'inactive'; });
+    localStorage.setItem('users', JSON.stringify(users));
+    renderUsersTable();
+    updateAdminStats && updateAdminStats();
+    showNotification('Selected users deactivated.', 'success');
+}
+
+function bulkDeleteUsers() {
+    const ids = getSelectedUserIds();
+    if (!ids.length) return showNotification('No users selected.', 'warning');
+    if (!confirm('Are you sure you want to delete selected users?')) return;
+    users = users.filter(u => !ids.includes(u.id));
+    localStorage.setItem('users', JSON.stringify(users));
+    renderUsersTable();
+    updateAdminStats && updateAdminStats();
+    showNotification('Selected users deleted.', 'success');
+}
+
+function toggleSelectAllUsers(checkbox) {
+    document.querySelectorAll('.admin-user-checkbox').forEach(cb => { cb.checked = checkbox.checked; });
+}
+
+function viewUserDetails(userId) {
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+    alert(`User Details:\nName: ${user.name}\nEmail: ${user.email}\nType: ${user.type}\nJoined: ${new Date(user.joined).toLocaleDateString()}\nStatus: ${user.status}`);
+}
+
+window.exportUsersCSV = exportUsersCSV;
+window.bulkDeactivateUsers = bulkDeactivateUsers;
+window.bulkDeleteUsers = bulkDeleteUsers;
+window.toggleSelectAllUsers = toggleSelectAllUsers;
+window.viewUserDetails = viewUserDetails;
 }
 
 function renderJobsTable() {
+// Admin job tab: search, filter, export, bulk actions, select all, view details
+document.addEventListener('DOMContentLoaded', function() {
+    const search = document.getElementById('admin-job-search');
+    const statusFilter = document.getElementById('admin-job-status-filter');
+    if (search) search.addEventListener('input', renderJobsTable);
+    if (statusFilter) statusFilter.addEventListener('change', renderJobsTable);
+});
+
+function exportJobsCSV() {
+    let csv = 'Title,Company,Category,Location,Type,Salary,Status,Posted\n';
+    jobs.forEach(j => {
+        csv += `"${j.title}","${j.company}","${j.category}","${j.location}","${j.type}","${j.salary}","${j.status}","${new Date(j.posted).toLocaleDateString()}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'jobs.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function getSelectedJobIds() {
+    return Array.from(document.querySelectorAll('.admin-job-checkbox:checked')).map(cb => parseInt(cb.value));
+}
+
+function bulkActivateJobs() {
+    const ids = getSelectedJobIds();
+    if (!ids.length) return showNotification('No jobs selected.', 'warning');
+    jobs.forEach(j => { if (ids.includes(j.id)) j.status = 'active'; });
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+    renderJobsTable();
+    showNotification('Selected jobs activated.', 'success');
+}
+
+function bulkDeactivateJobs() {
+    const ids = getSelectedJobIds();
+    if (!ids.length) return showNotification('No jobs selected.', 'warning');
+    jobs.forEach(j => { if (ids.includes(j.id)) j.status = 'inactive'; });
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+    renderJobsTable();
+    showNotification('Selected jobs deactivated.', 'success');
+}
+
+function bulkDeleteJobs() {
+    const ids = getSelectedJobIds();
+    if (!ids.length) return showNotification('No jobs selected.', 'warning');
+    if (!confirm('Are you sure you want to delete selected jobs?')) return;
+    jobs = jobs.filter(j => !ids.includes(j.id));
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+    renderJobsTable();
+    showNotification('Selected jobs deleted.', 'success');
+}
+
+function toggleSelectAllJobs(checkbox) {
+    document.querySelectorAll('.admin-job-checkbox').forEach(cb => { cb.checked = checkbox.checked; });
+}
+
+function viewJobDetails(jobId) {
+    const job = jobs.find(j => j.id === jobId);
+    if (!job) return;
+    alert(`Job Details:\nTitle: ${job.title}\nCompany: ${job.company}\nLocation: ${job.location}\nCategory: ${job.category}\nType: ${job.type}\nSalary: ${job.salary}\nStatus: ${job.status}`);
+}
+
+window.exportJobsCSV = exportJobsCSV;
+window.bulkActivateJobs = bulkActivateJobs;
+window.bulkDeactivateJobs = bulkDeactivateJobs;
+window.bulkDeleteJobs = bulkDeleteJobs;
+window.toggleSelectAllJobs = toggleSelectAllJobs;
+window.viewJobDetails = viewJobDetails;
     const tbody = document.getElementById('admin-jobs-table-body');
-    tbody.innerHTML = jobs.map(job => `
+    // Get filter/search values
+    const search = document.getElementById('admin-job-search')?.value?.toLowerCase() || '';
+    const statusFilter = document.getElementById('admin-job-status-filter')?.value || '';
+    let filteredJobs = jobs.filter(j => {
+        const matchesSearch = !search || j.title.toLowerCase().includes(search) || j.company.toLowerCase().includes(search);
+        const matchesStatus = !statusFilter || j.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
+    tbody.innerHTML = filteredJobs.map(job => `
         <tr>
+            <td><input type="checkbox" class="admin-job-checkbox" value="${job.id}"></td>
             <td>${job.title}</td>
             <td>${job.company}</td>
             <td>${job.category}</td>
@@ -1165,30 +1904,235 @@ function renderJobsTable() {
             <td>${job.status}</td>
             <td>
                 <div class="table-actions">
-                    <button class="btn btn-outline" onclick="toggleJobStatus(${job.id})">
+                    <button class="btn btn-outline btn-sm" onclick="viewJobDetails(${job.id})">View</button>
+                    <button class="btn btn-outline btn-sm" onclick="openEditJobModal(${job.id})">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleJobStatus(${job.id})">
                         ${job.status === 'active' ? 'Deactivate' : 'Activate'}
                     </button>
-                    <button class="btn btn-outline" onclick="deleteJob(${job.id})">Delete</button>
+                    <button class="btn btn-outline btn-sm" onclick="deleteJob(${job.id})">Delete</button>
                 </div>
             </td>
         </tr>
     `).join('');
+// Edit job modal logic
+function openEditJobModal(jobId) {
+    const job = jobs.find(j => j.id === jobId);
+    if (!job) return;
+    document.getElementById('edit-job-id').value = job.id;
+    document.getElementById('edit-job-title').value = job.title;
+    document.getElementById('edit-job-company').value = job.company;
+    document.getElementById('edit-job-location').value = job.location;
+    document.getElementById('edit-job-category').value = job.category;
+    document.getElementById('edit-job-type').value = job.type;
+    document.getElementById('edit-job-salary').value = job.salary;
+    document.getElementById('edit-job-description').value = job.description;
+    document.getElementById('edit-job-requirements').value = job.requirements;
+    document.getElementById('edit-job-status').value = job.status;
+    document.getElementById('edit-job-modal').classList.add('active');
+}
+function closeEditJobModal() {
+    document.getElementById('edit-job-modal').classList.remove('active');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const editJobForm = document.getElementById('edit-job-form');
+    if (editJobForm) {
+        editJobForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-job-id').value);
+            const job = jobs.find(j => j.id === id);
+            if (job) {
+                job.title = document.getElementById('edit-job-title').value;
+                job.company = document.getElementById('edit-job-company').value;
+                job.location = document.getElementById('edit-job-location').value;
+                job.category = document.getElementById('edit-job-category').value;
+                job.type = document.getElementById('edit-job-type').value;
+                job.salary = document.getElementById('edit-job-salary').value;
+                job.description = document.getElementById('edit-job-description').value;
+                job.requirements = document.getElementById('edit-job-requirements').value;
+                job.status = document.getElementById('edit-job-status').value;
+                localStorage.setItem('jobs', JSON.stringify(jobs));
+                renderJobsTable();
+                renderAllJobs && renderAllJobs();
+                showNotification('Job updated successfully!', 'success');
+                closeEditJobModal();
+            }
+        });
+    }
+});
+window.openEditJobModal = openEditJobModal;
+window.closeEditJobModal = closeEditJobModal;
 }
 
 function renderCompaniesTable() {
+// Admin company tab: search, filter, export, bulk actions, select all, view details, add/edit modals
+document.addEventListener('DOMContentLoaded', function() {
+    const search = document.getElementById('admin-company-search');
+    const statusFilter = document.getElementById('admin-company-status-filter');
+    if (search) search.addEventListener('input', renderCompaniesTable);
+    if (statusFilter) statusFilter.addEventListener('change', renderCompaniesTable);
+
+    // Add company modal
+    const addCompanyForm = document.getElementById('add-company-form');
+    if (addCompanyForm) {
+        addCompanyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('add-company-name').value;
+            const industry = document.getElementById('add-company-industry').value;
+            const description = document.getElementById('add-company-description').value;
+            if (companies.find(c => c.name === name)) {
+                showNotification('Company already exists', 'error');
+                return;
+            }
+            const company = {
+                id: companies.length + 1,
+                name,
+                industry,
+                description,
+                jobsPosted: 0,
+                status: 'active',
+                logo: '🏢'
+            };
+            companies.push(company);
+            localStorage.setItem('companies', JSON.stringify(companies));
+            showNotification('Company added successfully!', 'success');
+            closeAddCompanyModal();
+            renderCompaniesTable && renderCompaniesTable();
+            renderCompanies && renderCompanies();
+        });
+    }
+
+    // Edit company modal
+    const editCompanyForm = document.getElementById('edit-company-form');
+    if (editCompanyForm) {
+        editCompanyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('edit-company-id').value);
+            const company = companies.find(c => c.id === id);
+            if (company) {
+                company.name = document.getElementById('edit-company-name').value;
+                company.industry = document.getElementById('edit-company-industry').value;
+                company.description = document.getElementById('edit-company-description').value;
+                company.status = document.getElementById('edit-company-status').value;
+                localStorage.setItem('companies', JSON.stringify(companies));
+                renderCompaniesTable();
+                renderCompanies && renderCompanies();
+                showNotification('Company updated successfully!', 'success');
+                closeEditCompanyModal();
+            }
+        });
+    }
+});
+
+function exportCompaniesCSV() {
+    let csv = 'Name,Industry,Description,Jobs Posted,Status\n';
+    companies.forEach(c => {
+        csv += `"${c.name}","${c.industry}","${c.description}","${c.jobsPosted}","${c.status}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'companies.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function getSelectedCompanyIds() {
+    return Array.from(document.querySelectorAll('.admin-company-checkbox:checked')).map(cb => parseInt(cb.value));
+}
+
+function bulkActivateCompanies() {
+    const ids = getSelectedCompanyIds();
+    if (!ids.length) return showNotification('No companies selected.', 'warning');
+    companies.forEach(c => { if (ids.includes(c.id)) c.status = 'active'; });
+    localStorage.setItem('companies', JSON.stringify(companies));
+    renderCompaniesTable();
+    showNotification('Selected companies activated.', 'success');
+}
+
+function bulkDeactivateCompanies() {
+    const ids = getSelectedCompanyIds();
+    if (!ids.length) return showNotification('No companies selected.', 'warning');
+    companies.forEach(c => { if (ids.includes(c.id)) c.status = 'inactive'; });
+    localStorage.setItem('companies', JSON.stringify(companies));
+    renderCompaniesTable();
+    showNotification('Selected companies deactivated.', 'success');
+}
+
+function bulkDeleteCompanies() {
+    const ids = getSelectedCompanyIds();
+    if (!ids.length) return showNotification('No companies selected.', 'warning');
+    if (!confirm('Are you sure you want to delete selected companies?')) return;
+    companies = companies.filter(c => !ids.includes(c.id));
+    localStorage.setItem('companies', JSON.stringify(companies));
+    renderCompaniesTable();
+    showNotification('Selected companies deleted.', 'success');
+}
+
+function toggleSelectAllCompanies(checkbox) {
+    document.querySelectorAll('.admin-company-checkbox').forEach(cb => { cb.checked = checkbox.checked; });
+}
+
+function viewCompanyDetails(companyId) {
+    const company = companies.find(c => c.id === companyId);
+    if (!company) return;
+    alert(`Company Details:\nName: ${company.name}\nIndustry: ${company.industry}\nDescription: ${company.description}\nJobs Posted: ${company.jobsPosted}\nStatus: ${company.status}`);
+}
+
+function openEditCompanyModal(companyId) {
+    const company = companies.find(c => c.id === companyId);
+    if (!company) return;
+    document.getElementById('edit-company-id').value = company.id;
+    document.getElementById('edit-company-name').value = company.name;
+    document.getElementById('edit-company-industry').value = company.industry;
+    document.getElementById('edit-company-description').value = company.description;
+    document.getElementById('edit-company-status').value = company.status;
+    document.getElementById('edit-company-modal').classList.add('active');
+}
+function closeEditCompanyModal() {
+    document.getElementById('edit-company-modal').classList.remove('active');
+}
+function openAddCompanyModal() {
+    document.getElementById('add-company-modal').classList.add('active');
+}
+function closeAddCompanyModal() {
+    document.getElementById('add-company-modal').classList.remove('active');
+}
+
+window.exportCompaniesCSV = exportCompaniesCSV;
+window.bulkActivateCompanies = bulkActivateCompanies;
+window.bulkDeactivateCompanies = bulkDeactivateCompanies;
+window.bulkDeleteCompanies = bulkDeleteCompanies;
+window.toggleSelectAllCompanies = toggleSelectAllCompanies;
+window.viewCompanyDetails = viewCompanyDetails;
+window.openEditCompanyModal = openEditCompanyModal;
+window.closeEditCompanyModal = closeEditCompanyModal;
+window.openAddCompanyModal = openAddCompanyModal;
+window.closeAddCompanyModal = closeAddCompanyModal;
     const tbody = document.getElementById('admin-companies-table-body');
-    tbody.innerHTML = companies.map(company => `
+    // Get filter/search values
+    const search = document.getElementById('admin-company-search')?.value?.toLowerCase() || '';
+    const statusFilter = document.getElementById('admin-company-status-filter')?.value || '';
+    let filteredCompanies = companies.filter(c => {
+        const matchesSearch = !search || c.name.toLowerCase().includes(search) || c.industry.toLowerCase().includes(search);
+        const matchesStatus = !statusFilter || c.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
+    tbody.innerHTML = filteredCompanies.map(company => `
         <tr>
+            <td><input type="checkbox" class="admin-company-checkbox" value="${company.id}"></td>
             <td>${company.name}</td>
             <td>${company.industry}</td>
             <td>${company.jobsPosted}</td>
             <td>${company.status}</td>
             <td>
                 <div class="table-actions">
-                    <button class="btn btn-outline" onclick="toggleCompanyStatus(${company.id})">
+                    <button class="btn btn-outline btn-sm" onclick="viewCompanyDetails(${company.id})">View</button>
+                    <button class="btn btn-outline btn-sm" onclick="openEditCompanyModal(${company.id})">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="toggleCompanyStatus(${company.id})">
                         ${company.status === 'active' ? 'Deactivate' : 'Activate'}
                     </button>
-                    <button class="btn btn-outline" onclick="deleteCompany(${company.id})">Delete</button>
+                    <button class="btn btn-outline btn-sm" onclick="deleteCompany(${company.id})">Delete</button>
                 </div>
             </td>
         </tr>

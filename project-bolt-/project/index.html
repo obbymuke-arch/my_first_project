@@ -10,6 +10,127 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Backup History Modal -->
+    <div class="modal" id="backup-history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Backup History</h2>
+                <button class="modal-close" onclick="closeBackupHistoryModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="backup-history-list" style="max-height:350px;overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Restore Simulation Modal -->
+    <div class="modal" id="restore-sim-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Restore in Progress</h2>
+            </div>
+            <div class="modal-body">
+                <div id="restore-progress-bar" style="margin-bottom:1.5rem;">
+                    <div style="background:var(--gray-200);border-radius:8px;overflow:hidden;height:18px;width:100%;">
+                        <div id="restore-progress-inner" style="background:var(--success);height:100%;width:0%;transition:width 0.4s;"></div>
+                    </div>
+                    <div id="restore-progress-label" style="margin-top:0.5rem;font-size:0.95rem;color:var(--success);font-weight:500;">Restoring backup...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Job Modal -->
+    <div class="modal" id="edit-job-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Job</h2>
+                <button class="modal-close" onclick="closeEditJobModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-job-form">
+                    <input type="hidden" id="edit-job-id">
+                    <div style="margin-bottom:1rem;">
+                        <label>Title</label><br>
+                        <input type="text" id="edit-job-title" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Company</label><br>
+                        <input type="text" id="edit-job-company" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Location</label><br>
+                        <input type="text" id="edit-job-location" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Category</label><br>
+                        <input type="text" id="edit-job-category" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Type</label><br>
+                        <input type="text" id="edit-job-type" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Salary</label><br>
+                        <input type="text" id="edit-job-salary" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Description</label><br>
+                        <textarea id="edit-job-description" required style="width:100%;padding:0.5rem;"></textarea>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Requirements</label><br>
+                        <textarea id="edit-job-requirements" required style="width:100%;padding:0.5rem;"></textarea>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Status</label><br>
+                        <select id="edit-job-status" required style="width:100%;padding:0.5rem;">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit User Modal -->
+    <div class="modal" id="edit-user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit User</h2>
+                <button class="modal-close" onclick="closeEditUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-user-form">
+                    <input type="hidden" id="edit-user-id">
+                    <div style="margin-bottom:1rem;">
+                        <label>Name</label><br>
+                        <input type="text" id="edit-user-name" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Email</label><br>
+                        <input type="email" id="edit-user-email" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Type</label><br>
+                        <select id="edit-user-type" required style="width:100%;padding:0.5rem;">
+                            <option value="jobseeker">Job Seeker</option>
+                            <option value="employer">Employer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Status</label><br>
+                        <select id="edit-user-status" required style="width:100%;padding:0.5rem;">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -538,6 +659,7 @@
                         </div>
                         
                         <div class="admin-tabs">
+                            <!-- Audit Logs & Compliance Controls -->
                             <button class="tab-btn" data-tab="backup">Backup & Drill</button>
                             <button class="tab-btn active" data-tab="users">Users</button>
                             <button class="tab-btn" data-tab="jobs">Jobs</button>
@@ -556,6 +678,17 @@
                                     <h3>Backup & Drill</h3>
                                     <p>Manage system backups and run disaster recovery drills.</p>
                                     <div class="backup-actions" style="margin-bottom:1.5rem;">
+                                        <button class="btn btn-outline btn-sm" onclick="showScheduleBackupModal()" title="Schedule a future backup">Schedule Backup</button>
+                                        <select id="backup-type-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                            <option value="">All Types</option>
+                                            <option value="Full Backup">Full Backup</option>
+                                            <option value="Drill">Drill</option>
+                                        </select>
+                                        <select id="backup-status-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                            <option value="">All Statuses</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="In Progress">In Progress</option>
+                                        </select>
                                         <button class="btn btn-primary btn-sm" onclick="runBackup()">Run Backup</button>
                                         <button class="btn btn-outline btn-sm" onclick="restoreBackup()">Restore Backup</button>
                                         <button class="btn btn-outline btn-sm" onclick="runDrill()">Run Drill</button>
@@ -575,20 +708,52 @@
                                                 <tr>
                                                     <td>2025-09-17 09:00</td>
                                                     <td>Full Backup</td>
-                                                    <td><span class="badge badge-success">Completed</span></td>
+                                                    <td><span class="badge badge-success" title="Backup completed successfully">Completed &#x2714;</span></td>
                                                     <td>
-                                                        <button class="btn btn-outline btn-sm" onclick="viewBackup('2025-09-17 09:00')">View</button>
-                                                        <button class="btn btn-outline btn-sm" onclick="deleteBackup('2025-09-17 09:00')">Delete</button>
+                                                        <button class="btn btn-outline btn-sm" onclick="viewBackup('2025-09-17 09:00')" title="View backup details">View</button>
+                                                        <button class="btn btn-outline btn-sm" onclick="deleteBackup('2025-09-17 09:00')" title="Delete this backup">Delete</button>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>2025-09-16 15:30</td>
                                                     <td>Drill</td>
-                                                    <td><span class="badge badge-warning">In Progress</span></td>
+                                                    <td><span class="badge badge-warning" title="Backup is still running">In Progress &#x23F3;</span></td>
                                                     <td>
-                                                        <button class="btn btn-outline btn-sm" onclick="viewBackup('2025-09-16 15:30')">View</button>
+                                                        <button class="btn btn-outline btn-sm" onclick="viewBackup('2025-09-16 15:30')" title="View backup details">View</button>
                                                     </td>
                                                 </tr>
+                                <!-- Progress Bar (hidden by default, shown when running backup/drill) -->
+                                <div id="backup-progress-bar" style="display:none;margin-bottom:1.5rem;">
+                                    <div style="background:var(--gray-200);border-radius:8px;overflow:hidden;height:18px;width:100%;">
+                                        <div id="backup-progress-inner" style="background:var(--primary);height:100%;width:0%;transition:width 0.4s;"></div>
+                                    </div>
+                                    <div id="backup-progress-label" style="margin-top:0.5rem;font-size:0.95rem;color:var(--primary);font-weight:500;">Running backup...</div>
+                                </div>
+    <!-- Schedule Backup Modal -->
+    <div class="modal" id="schedule-backup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Schedule Backup</h2>
+                <button class="modal-close" onclick="closeScheduleBackupModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="schedule-backup-form">
+                    <div style="margin-bottom:1rem;">
+                        <label>Date & Time</label><br>
+                        <input type="datetime-local" id="schedule-backup-datetime" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Type</label><br>
+                        <select id="schedule-backup-type" required style="width:100%;padding:0.5rem;">
+                            <option value="Full Backup">Full Backup</option>
+                            <option value="Drill">Drill</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
                                             </tbody>
                                         </table>
                                     </div>
@@ -596,6 +761,49 @@
                             </div>
                             <!-- Users Tab -->
                             <div class="tab-content active" id="users-tab">
+                                <div class="admin-users-controls" style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+                                    <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">Add User</button>
+    <!-- Add User Modal -->
+    <div class="modal" id="add-user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add User</h2>
+                <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-user-form">
+                    <div style="margin-bottom:1rem;">
+                        <label>Name</label><br>
+                        <input type="text" id="add-user-name" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Email</label><br>
+                        <input type="email" id="add-user-email" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Role</label><br>
+                        <select id="add-user-type" required style="width:100%;padding:0.5rem;">
+                            <option value="jobseeker">Job Seeker</option>
+                            <option value="employer">Employer</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+                                    <input type="text" id="admin-user-search" placeholder="Search users by name or email" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;min-width:220px;">
+                                    <select id="admin-user-type-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                        <option value="">All Types</option>
+                                        <option value="jobseeker">Job Seeker</option>
+                                        <option value="employer">Employer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportUsersCSV()">Export CSV</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeactivateUsers()">Deactivate Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeleteUsers()">Delete Selected</button>
+                                </div>
                                 <div class="admin-stats">
                                     <div class="admin-stat">
                                         <h3 id="total-users-admin">0</h3>
@@ -615,6 +823,7 @@
                                     <table>
                                         <thead>
                                             <tr>
+                                                <th><input type="checkbox" id="admin-users-select-all" onclick="toggleSelectAllUsers(this)"></th>
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Type</th>
@@ -631,6 +840,66 @@
                             
                             <!-- Jobs Tab -->
                             <div class="tab-content" id="jobs-tab">
+                                <div class="admin-jobs-controls" style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+                                    <input type="text" id="admin-job-search" placeholder="Search jobs by title or company" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;min-width:220px;">
+                                    <select id="admin-job-status-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                        <option value="">All Statuses</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportJobsCSV()">Export CSV</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkActivateJobs()">Activate Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeactivateJobs()">Deactivate Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeleteJobs()">Delete Selected</button>
+                                    <button class="btn btn-primary btn-sm" onclick="openAddJobModal()">Add Job</button>
+                                </div>
+    <!-- Add Job Modal -->
+    <div class="modal" id="add-job-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Job</h2>
+                <button class="modal-close" onclick="closeAddJobModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-job-form">
+                    <div style="margin-bottom:1rem;">
+                        <label>Title</label><br>
+                        <input type="text" id="add-job-title" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Company</label><br>
+                        <input type="text" id="add-job-company" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Location</label><br>
+                        <input type="text" id="add-job-location" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Category</label><br>
+                        <input type="text" id="add-job-category" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Type</label><br>
+                        <input type="text" id="add-job-type" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Salary</label><br>
+                        <input type="text" id="add-job-salary" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Description</label><br>
+                        <textarea id="add-job-description" required style="width:100%;padding:0.5rem;"></textarea>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Requirements</label><br>
+                        <textarea id="add-job-requirements" required style="width:100%;padding:0.5rem;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Job</button>
+                </form>
+            </div>
+        </div>
+    </div>
                                 <div class="admin-stats">
                                     <div class="admin-stat">
                                         <h3 id="total-jobs-admin">0</h3>
@@ -650,6 +919,7 @@
                                     <table>
                                         <thead>
                                             <tr>
+                                                <th><input type="checkbox" id="admin-jobs-select-all" onclick="toggleSelectAllJobs(this)"></th>
                                                 <th>Job Title</th>
                                                 <th>Company</th>
                                                 <th>Category</th>
@@ -667,18 +937,92 @@
                             
                             <!-- Companies Tab -->
                             <div class="tab-content" id="companies-tab">
+                                <div class="admin-companies-controls" style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+                                    <button class="btn btn-primary btn-sm" onclick="openAddCompanyModal()">Add Company</button>
+                                    <input type="text" id="admin-company-search" placeholder="Search companies by name or industry" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;min-width:220px;">
+                                    <select id="admin-company-status-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                        <option value="">All Statuses</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportCompaniesCSV()">Export CSV</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkActivateCompanies()">Activate Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeactivateCompanies()">Deactivate Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeleteCompanies()">Delete Selected</button>
+                                </div>
                                 <div class="companies-management">
                                     <h3>Company Management</h3>
                                     <div class="companies-table">
                                         <table>
                                             <thead>
                                                 <tr>
+                                                    <th><input type="checkbox" id="admin-companies-select-all" onclick="toggleSelectAllCompanies(this)"></th>
                                                     <th>Company Name</th>
                                                     <th>Industry</th>
                                                     <th>Jobs Posted</th>
                                                     <th>Status</th>
                                                     <th>Actions</th>
                                                 </tr>
+    <!-- Add Company Modal -->
+    <div class="modal" id="add-company-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Company</h2>
+                <button class="modal-close" onclick="closeAddCompanyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-company-form">
+                    <div style="margin-bottom:1rem;">
+                        <label>Name</label><br>
+                        <input type="text" id="add-company-name" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Industry</label><br>
+                        <input type="text" id="add-company-industry" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Description</label><br>
+                        <input type="text" id="add-company-description" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Company</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Company Modal -->
+    <div class="modal" id="edit-company-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Company</h2>
+                <button class="modal-close" onclick="closeEditCompanyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-company-form">
+                    <input type="hidden" id="edit-company-id">
+                    <div style="margin-bottom:1rem;">
+                        <label>Name</label><br>
+                        <input type="text" id="edit-company-name" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Industry</label><br>
+                        <input type="text" id="edit-company-industry" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Description</label><br>
+                        <input type="text" id="edit-company-description" required style="width:100%;padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Status</label><br>
+                        <select id="edit-company-status" required style="width:100%;padding:0.5rem;">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
                                             </thead>
                                             <tbody id="admin-companies-table-body">
                                                 <!-- Companies will be loaded here -->
@@ -756,33 +1100,113 @@
 
                             <!-- Audit Logs & Compliance Tab -->
                             <div class="tab-content" id="audit-tab">
+                                <div class="admin-audit-controls" style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+                                    <input type="text" id="admin-audit-search" placeholder="Search logs by user or action" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;min-width:220px;">
+                                    <select id="admin-audit-status-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                        <option value="">All Statuses</option>
+                                        <option value="Success">Success</option>
+                                        <option value="Deleted">Deleted</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportAuditLogsCSV()">Export CSV</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeleteAuditLogs()">Delete Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="openComplianceChecklistModal()">Compliance Checklist</button>
+                                </div>
                                 <div class="audit-section">
+                                <!-- Audit Analytics Summary -->
+                                <div class="audit-analytics-summary" style="display:flex;gap:2rem;margin-bottom:2rem;align-items:center;flex-wrap:wrap;">
+                                    <div style="background:var(--primary-light);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:var(--primary);">2</div>
+                                        <div style="color:var(--primary);font-weight:500;">Total Logs</div>
+                                    </div>
+                                    <div style="background:var(--success);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:#fff;">1</div>
+                                        <div style="color:#fff;font-weight:500;">Success</div>
+                                    </div>
+                                    <div style="background:var(--error);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:#fff;">1</div>
+                                        <div style="color:#fff;font-weight:500;">Deleted</div>
+                                    </div>
+                                    <!-- Pie chart placeholder -->
+                                    <div style="min-width:180px;text-align:center;">
+                                        <canvas id="audit-pie-chart" width="120" height="120"></canvas>
+                                        <div style="font-size:0.95rem;color:var(--gray-600);margin-top:0.5rem;">Log Status Distribution</div>
+                                    </div>
+                                </div>
+                                <!-- Audit Timeline -->
+                                <div class="audit-timeline" style="margin-bottom:2rem;">
+                                    <h4 style="color:var(--primary);margin-bottom:0.5rem;">Recent Activity Timeline</h4>
+                                    <ul id="audit-timeline-list" style="list-style:none;padding:0;margin:0;">
+                                        <li style="margin-bottom:1.2rem;position:relative;padding-left:2.2rem;">
+                                            <span style="position:absolute;left:0;top:0.2rem;width:1.2rem;height:1.2rem;background:var(--success);border-radius:50%;display:inline-block;"></span>
+                                            <span style="font-weight:600;">2025-09-17 10:15</span> &mdash; Jane Doe logged in
+                                        </li>
+                                        <li style="margin-bottom:1.2rem;position:relative;padding-left:2.2rem;">
+                                            <span style="position:absolute;left:0;top:0.2rem;width:1.2rem;height:1.2rem;background:var(--error);border-radius:50%;display:inline-block;"></span>
+                                            <span style="font-weight:600;">2025-09-17 10:20</span> &mdash; Admin deleted job #5
+                                        </li>
+                                    </ul>
+                                </div>
                                     <h3>Audit Logs & Compliance</h3>
                                     <p>Track system activity and compliance events.</p>
                                     <div class="audit-table">
                                         <table>
                                             <thead>
                                                 <tr>
+                                                    <th><input type="checkbox" id="admin-audit-select-all" onclick="toggleSelectAllAuditLogs(this)"></th>
                                                     <th>Timestamp</th>
                                                     <th>User</th>
                                                     <th>Action</th>
                                                     <th>Status</th>
+                                                    <th>Details</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="audit-table-body">
                                                 <!-- Audit logs will be loaded here -->
                                                 <tr>
+                                                    <td><input type="checkbox" class="admin-audit-checkbox" value="1"></td>
                                                     <td>2025-09-17 10:15</td>
                                                     <td>Jane Doe</td>
                                                     <td>User Login</td>
                                                     <td><span class="badge badge-success">Success</span></td>
+                                                    <td><button class="btn btn-outline btn-sm" onclick="openAuditLogDetailModal(1)">View</button></td>
                                                 </tr>
                                                 <tr>
+                                                    <td><input type="checkbox" class="admin-audit-checkbox" value="2"></td>
                                                     <td>2025-09-17 10:20</td>
                                                     <td>Admin</td>
                                                     <td>Deleted Job #5</td>
                                                     <td><span class="badge badge-error">Deleted</span></td>
+                                                    <td><button class="btn btn-outline btn-sm" onclick="openAuditLogDetailModal(2)">View</button></td>
                                                 </tr>
+    <!-- Audit Log Detail Modal -->
+    <div class="modal" id="audit-log-detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Audit Log Details</h2>
+                <button class="modal-close" onclick="closeAuditLogDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="audit-log-detail-body">
+            </div>
+        </div>
+    </div>
+    <!-- Compliance Checklist Modal -->
+    <div class="modal" id="compliance-checklist-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Compliance Checklist</h2>
+                <button class="modal-close" onclick="closeComplianceChecklistModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul style="padding-left:1.2rem;">
+                    <li><input type="checkbox" checked disabled> Data retention policy in place</li>
+                    <li><input type="checkbox" checked disabled> User access logs enabled</li>
+                    <li><input type="checkbox" checked disabled> Regular security audits</li>
+                    <li><input type="checkbox"> GDPR compliance reviewed</li>
+                    <li><input type="checkbox"> Incident response plan tested</li>
+                </ul>
+            </div>
+        </div>
+    </div>
                                             </tbody>
                                         </table>
                                     </div>
@@ -791,6 +1215,34 @@
 
                             <!-- Content Moderation Tab -->
                             <div class="tab-content" id="moderation-tab">
+                                <div class="admin-moderation-controls" style="display:flex;gap:1rem;margin-bottom:1.5rem;align-items:center;">
+                                    <input type="text" id="admin-moderation-search" placeholder="Search by user or type" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;min-width:220px;">
+                                    <select id="admin-moderation-status-filter" style="padding:0.5rem 1rem;border-radius:6px;border:1px solid #d1d5db;">
+                                        <option value="">All Statuses</option>
+                                        <option value="Flagged">Flagged</option>
+                                        <option value="Approved">Approved</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportModerationCSV()">Export CSV</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkApproveContent()">Approve Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkRejectContent()">Reject Selected</button>
+                                    <button class="btn btn-outline btn-sm" onclick="bulkDeleteContent()">Delete Selected</button>
+                                </div>
+                                <!-- Moderation Analytics Summary -->
+                                <div class="moderation-analytics-summary" style="display:flex;gap:2rem;margin-bottom:2rem;align-items:center;flex-wrap:wrap;">
+                                    <div style="background:var(--primary-light);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:var(--primary);">1</div>
+                                        <div style="color:var(--primary);font-weight:500;">Flagged</div>
+                                    </div>
+                                    <div style="background:var(--success);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:#fff;">0</div>
+                                        <div style="color:#fff;font-weight:500;">Approved</div>
+                                    </div>
+                                    <div style="background:var(--error);padding:1.2rem 2rem;border-radius:10px;min-width:180px;text-align:center;">
+                                        <div style="font-size:2rem;font-weight:700;color:#fff;">0</div>
+                                        <div style="color:#fff;font-weight:500;">Rejected</div>
+                                    </div>
+                                </div>
                                 <div class="moderation-section">
                                     <h3>Content Moderation</h3>
                                     <p>Review and moderate user-generated content.</p>
@@ -798,6 +1250,7 @@
                                         <table>
                                             <thead>
                                                 <tr>
+                                                    <th><input type="checkbox" id="admin-moderation-select-all" onclick="toggleSelectAllModeration(this)"></th>
                                                     <th>Content ID</th>
                                                     <th>User</th>
                                                     <th>Type</th>
@@ -809,6 +1262,7 @@
                                             <tbody id="moderation-table-body">
                                                 <!-- Moderation items will be loaded here -->
                                                 <tr>
+                                                    <td><input type="checkbox" class="admin-moderation-checkbox" value="C-2001"></td>
                                                     <td>#C-2001</td>
                                                     <td>John Smith</td>
                                                     <td>Comment</td>
@@ -817,9 +1271,20 @@
                                                     <td>
                                                         <button class="btn btn-outline btn-sm" onclick="approveContent('C-2001')">Approve</button>
                                                         <button class="btn btn-outline btn-sm" onclick="rejectContent('C-2001')">Reject</button>
-                                                        <button class="btn btn-outline btn-sm" onclick="viewContent('C-2001')">View</button>
+                                                        <button class="btn btn-outline btn-sm" onclick="openModerationDetailModal('C-2001')">View</button>
                                                     </td>
                                                 </tr>
+    <!-- Moderation Detail Modal -->
+    <div class="modal" id="moderation-detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Moderation Details</h2>
+                <button class="modal-close" onclick="closeModerationDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="moderation-detail-body">
+            </div>
+        </div>
+    </div>
                                             </tbody>
                                         </table>
                                     </div>
@@ -899,5 +1364,6 @@
     </main>
 
     <script src="app.js"></script>
+</main>
 </body>
 </html>
