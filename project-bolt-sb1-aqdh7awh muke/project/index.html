@@ -1,3 +1,58 @@
+                                <!-- Edit Job Modal -->
+                                <div class="modal" id="edit-job-modal">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2>Edit Job</h2>
+                                            <button class="modal-close" onclick="closeEditJobModal()">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="edit-job-form">
+                                                <input type="hidden" id="edit-job-id">
+                                                <div class="form-group">
+                                                    <label>Job Title</label>
+                                                    <input type="text" id="edit-job-title" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Company</label>
+                                                    <input type="text" id="edit-job-company" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Location</label>
+                                                    <input type="text" id="edit-job-location" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Category</label>
+                                                    <input type="text" id="edit-job-category" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Type</label>
+                                                    <input type="text" id="edit-job-type" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Status</label>
+                                                    <select id="edit-job-status" required>
+                                                        <option value="active">Active</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="inactive">Inactive</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Salary</label>
+                                                    <input type="text" id="edit-job-salary">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Description</label>
+                                                    <textarea id="edit-job-description" rows="3" required></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Requirements</label>
+                                                    <textarea id="edit-job-requirements" rows="2"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
         <!-- Company Details Modal -->
         <div class="modal" id="company-details-modal">
             <div class="modal-content">
@@ -74,6 +129,28 @@
                     <button class="btn btn-outline" id="save-job">Save Job</button>
                     <button class="btn btn-primary" id="apply-job">Apply Now</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Job Application Modal -->
+        <div class="modal" id="job-application-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Apply for <span id="application-job-title">Job</span></h2>
+                    <button class="modal-close" onclick="closeJobApplicationModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="job-application-form" enctype="multipart/form-data">
+                        <div id="dynamic-job-fields"></div>
+                        <div class="form-group">
+                            <label for="applicant-cv">Upload CV</label>
+                            <input type="file" id="applicant-cv" name="cv" accept=".pdf,.doc,.docx" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                    </form>
+                </div>
+            </div>
+        </div>
             </div>
         </div>
 
@@ -944,6 +1021,43 @@
                                             <tbody id="admin-companies-table-body">
                                                 <!-- Companies will be loaded here -->
                                             </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Edit Company Modal -->
+                                <div class="modal" id="edit-company-modal">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2>Edit Company</h2>
+                                            <button class="modal-close" onclick="closeEditCompanyModal()">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="edit-company-form">
+                                                <input type="hidden" id="edit-company-id">
+                                                <div class="form-group">
+                                                    <label>Company Name</label>
+                                                    <input type="text" id="edit-company-name" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Industry</label>
+                                                    <input type="text" id="edit-company-industry" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Description</label>
+                                                    <textarea id="edit-company-description" rows="3" required></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Status</label>
+                                                    <select id="edit-company-status" required>
+                                                        <option value="active">Active</option>
+                                                        <option value="inactive">Inactive</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                         </table>
                                     </div>
                                 </div>

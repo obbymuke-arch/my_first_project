@@ -1,3 +1,149 @@
+// Admin Job Edit Functionality
+function editJob(jobId) {
+  const job = AppState.jobs.find(j => j.id === jobId);
+  if (!job) return;
+  document.getElementById('edit-job-id').value = job.id;
+  document.getElementById('edit-job-title').value = job.title;
+  document.getElementById('edit-job-company').value = job.company;
+  document.getElementById('edit-job-location').value = job.location;
+  document.getElementById('edit-job-category').value = job.category;
+  document.getElementById('edit-job-type').value = job.type;
+  document.getElementById('edit-job-status').value = job.status;
+  document.getElementById('edit-job-salary').value = job.salary || '';
+  document.getElementById('edit-job-description').value = job.description;
+  document.getElementById('edit-job-requirements').value = job.requirements || '';
+  const modal = document.getElementById('edit-job-modal');
+  if (modal) modal.classList.add('show');
+}
+
+function closeEditJobModal() {
+  const modal = document.getElementById('edit-job-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+function handleEditJob(e) {
+  e.preventDefault();
+  const jobId = parseInt(document.getElementById('edit-job-id').value);
+  const jobIndex = AppState.jobs.findIndex(j => j.id === jobId);
+  if (jobIndex === -1) return;
+  AppState.jobs[jobIndex] = {
+    ...AppState.jobs[jobIndex],
+    title: document.getElementById('edit-job-title').value,
+    company: document.getElementById('edit-job-company').value,
+    location: document.getElementById('edit-job-location').value,
+    category: document.getElementById('edit-job-category').value,
+    type: document.getElementById('edit-job-type').value,
+    status: document.getElementById('edit-job-status').value,
+    salary: document.getElementById('edit-job-salary').value,
+    description: document.getElementById('edit-job-description').value,
+    requirements: document.getElementById('edit-job-requirements').value
+  };
+  closeEditJobModal();
+  loadJobsTable();
+  showNotification('Job updated successfully!', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const editJobForm = document.getElementById('edit-job-form');
+  if (editJobForm) {
+    editJobForm.addEventListener('submit', handleEditJob);
+  }
+});
+// Admin Company Edit Functionality
+function editCompany(companyId) {
+  const company = AppState.companies.find(c => c.id === companyId);
+  if (!company) return;
+  document.getElementById('edit-company-id').value = company.id;
+  document.getElementById('edit-company-name').value = company.name;
+  document.getElementById('edit-company-industry').value = company.industry;
+  document.getElementById('edit-company-description').value = company.description;
+  document.getElementById('edit-company-status').value = company.status;
+  const modal = document.getElementById('edit-company-modal');
+  if (modal) modal.classList.add('show');
+}
+
+function closeEditCompanyModal() {
+  const modal = document.getElementById('edit-company-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+function handleEditCompany(e) {
+  e.preventDefault();
+  const companyId = parseInt(document.getElementById('edit-company-id').value);
+  const companyIndex = AppState.companies.findIndex(c => c.id === companyId);
+  if (companyIndex === -1) return;
+  AppState.companies[companyIndex] = {
+    ...AppState.companies[companyIndex],
+    name: document.getElementById('edit-company-name').value,
+    industry: document.getElementById('edit-company-industry').value,
+    description: document.getElementById('edit-company-description').value,
+    status: document.getElementById('edit-company-status').value
+  };
+  closeEditCompanyModal();
+  loadCompaniesTable();
+  showNotification('Company updated successfully!', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const editCompanyForm = document.getElementById('edit-company-form');
+  if (editCompanyForm) {
+    editCompanyForm.addEventListener('submit', handleEditCompany);
+  }
+});
+// --- Job Application Modal Logic ---
+function openJobApplicationModal(job) {
+  document.getElementById('application-job-title').textContent = job.title;
+  const dynamicFields = document.getElementById('dynamic-job-fields');
+  dynamicFields.innerHTML = '';
+  // Example: Each job could have its own required fields
+  // For demo, require name and email for all, plus job-specific fields if any
+  const baseFields = [
+    { label: 'Full Name', id: 'applicant-name', type: 'text', required: true },
+    { label: 'Email', id: 'applicant-email', type: 'email', required: true }
+  ];
+  // You can extend this logic to add job-specific fields
+  baseFields.forEach(field => {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.innerHTML = `<label for="${field.id}">${field.label}</label><input type="${field.type}" id="${field.id}" name="${field.id}" ${field.required ? 'required' : ''}>`;
+    dynamicFields.appendChild(div);
+  });
+  document.getElementById('job-application-modal').style.display = 'block';
+}
+
+function closeJobApplicationModal() {
+  document.getElementById('job-application-modal').style.display = 'none';
+  document.getElementById('job-application-form').reset();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const applyBtn = document.getElementById('apply-job');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', function() {
+      // Get current job from modal (you may need to adapt this logic)
+      const jobTitle = document.getElementById('modal-job-title').textContent;
+      const job = AppState.jobs.find(j => j.title === jobTitle);
+      if (job) openJobApplicationModal(job);
+    });
+  }
+  const appForm = document.getElementById('job-application-form');
+  if (appForm) {
+    appForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Collect form data
+      const formData = new FormData(appForm);
+      // Example: Save application in AppState (extend as needed)
+      AppState.applications.push({
+        jobTitle: document.getElementById('application-job-title').textContent,
+        name: formData.get('applicant-name'),
+        email: formData.get('applicant-email'),
+        cv: formData.get('cv') // This is a File object
+      });
+      alert('Application submitted!');
+      closeJobApplicationModal();
+    });
+  }
+});
 // Application State
 const AppState = {
   currentUser: null,
