@@ -1,0 +1,989 @@
+        <!-- Company Details Modal -->
+        <div class="modal" id="company-details-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="details-company-name">Company Details</h2>
+                    <button class="modal-close" onclick="closeCompanyDetailsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="company-details-content">
+                        <div class="detail-item">
+                            <span class="detail-label">Name:</span>
+                            <span id="details-company-name-label" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Industry:</span>
+                            <span id="details-company-industry-label" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Description:</span>
+                            <span id="details-company-description-label" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Jobs Posted:</span>
+                            <span id="details-company-jobcount-label" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span id="details-company-status-label" class="detail-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerJobConnect - Find Your Dream Job</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Modals Container -->
+    <div id="modals-container">
+        <!-- Job Detail Modal -->
+        <div class="modal" id="job-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-job-title">Job Title</h2>
+                    <button class="modal-close" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="job-info">
+                        <div class="job-meta">
+                            <span class="company" id="modal-company">Company</span>
+                            <span class="location" id="modal-location">Location</span>
+                            <span class="job-type" id="modal-type">Type</span>
+                            <span class="salary" id="modal-salary">Salary</span>
+                        </div>
+                        <div class="job-description">
+                            <h3>Job Description</h3>
+                            <p id="modal-description"></p>
+                        </div>
+                        <div class="job-requirements">
+                            <h3>Requirements</h3>
+                            <p id="modal-requirements"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="save-job">Save Job</button>
+                    <button class="btn btn-primary" id="apply-job">Apply Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div class="modal" id="edit-user-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit User</h2>
+                    <button class="modal-close" onclick="closeEditUserModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-user-form">
+                        <input type="hidden" id="edit-user-id">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="edit-user-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="edit-user-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="edit-user-type" required>
+                                <option value="jobseeker">Job Seeker</option>
+                                <option value="employer">Employer</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="edit-user-status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add User Modal -->
+        <div class="modal" id="add-user-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add User</h2>
+                    <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-user-form">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="add-user-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="add-user-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="add-user-password" required minlength="4" autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select id="add-user-type" required>
+                                <option value="jobseeker">Job Seeker</option>
+                                <option value="employer">Employer</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Details Modal -->
+        <div class="modal" id="user-details-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>User Details</h2>
+                    <button class="modal-close" onclick="closeUserDetailsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="user-details-content">
+                        <div class="user-avatar-section">
+                            <div id="details-user-avatar" class="details-avatar">U</div>
+                            <div class="user-basic-info">
+                                <div id="details-user-name-label" class="user-name"></div>
+                                <div id="details-user-email-label" class="user-email"></div>
+                                <span id="details-user-status-badge" class="badge"></span>
+                            </div>
+                        </div>
+                        <div class="user-details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Role</span>
+                                <span id="details-user-type-label" class="detail-value"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Joined</span>
+                                <span id="details-user-joined-label" class="detail-value"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone</span>
+                                <span id="details-user-phone-label" class="detail-value"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Address</span>
+                                <span id="details-user-address-label" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-item full-width">
+                            <span class="detail-label">Additional Info</span>
+                            <div id="details-user-info-label" class="detail-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>CareerJobConnect</h2>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link active" data-page="home">Home</a>
+                <a href="#" class="nav-link" data-page="jobs">Jobs</a>
+                <a href="#" class="nav-link" data-page="companies">Companies</a>
+                <a href="#" class="nav-link" data-page="about">About</a>
+                <div class="nav-auth" id="nav-auth">
+                    <button class="btn btn-outline" data-page="login">Login</button>
+                    <button class="btn btn-primary" data-page="register">Sign Up</button>
+                </div>
+                <div class="nav-user" id="nav-user" style="display: none;">
+                    <div class="user-menu">
+                        <button class="btn btn-primary" id="dashboard-btn">Dashboard</button>
+                        <button class="btn btn-outline" id="logout-nav-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="main-content">
+        <!-- Home Page -->
+        <div class="page active" id="home-page">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>Find Your Dream Job Today</h1>
+                        <p>Connect with top companies and discover opportunities that match your skills and ambitions.</p>
+                        
+                        <!-- Job Search Form -->
+                        <div class="search-form">
+                            <div class="search-inputs">
+                                <input type="text" id="job-search" placeholder="Job title, keywords, or company">
+                                <input type="text" id="location-search" placeholder="Location">
+                                <button class="btn btn-primary" id="search-btn">Search Jobs</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-jobs">1,250</span>
+                                <span class="stat-label">Active Jobs</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-companies">450</span>
+                                <span class="stat-label">Companies</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="total-users">15,000</span>
+                                <span class="stat-label">Job Seekers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Jobs Section -->
+            <section class="featured-jobs">
+                <div class="container">
+                    <h2>Featured Jobs</h2>
+                    <div class="jobs-grid" id="featured-jobs-grid">
+                        <!-- Featured jobs will be dynamically loaded here -->
+                    </div>
+                    <div class="section-footer">
+                        <button class="btn btn-outline" data-page="jobs">View All Jobs</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="how-it-works">
+                <div class="container">
+                    <h2>How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <div class="step-icon">1</div>
+                            <h3>Create Profile</h3>
+                            <p>Build your professional profile and upload your resume</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">2</div>
+                            <h3>Search Jobs</h3>
+                            <p>Browse thousands of job opportunities from top companies</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">3</div>
+                            <h3>Apply & Connect</h3>
+                            <p>Apply directly and connect with hiring managers</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">4</div>
+                            <h3>Get Hired</h3>
+                            <p>Land your dream job and start your new career</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Jobs Page -->
+        <div class="page" id="jobs-page">
+            <section class="jobs-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>Find Jobs</h1>
+                        <p>Discover your next career opportunity</p>
+                    </div>
+
+                    <!-- Job Filters -->
+                    <div class="filters-container">
+                        <div class="filters">
+                            <select id="category-filter">
+                                <option value="">All Categories</option>
+                                <option value="technology">Technology</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="design">Design</option>
+                                <option value="sales">Sales</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                            </select>
+                            
+                            <select id="experience-filter">
+                                <option value="">All Experience Levels</option>
+                                <option value="entry">Entry Level</option>
+                                <option value="mid">Mid Level</option>
+                                <option value="senior">Senior Level</option>
+                                <option value="executive">Executive</option>
+                            </select>
+                            
+                            <select id="type-filter">
+                                <option value="">All Job Types</option>
+                                <option value="full-time">Full Time</option>
+                                <option value="part-time">Part Time</option>
+                                <option value="contract">Contract</option>
+                                <option value="remote">Remote</option>
+                            </select>
+                            
+                            <button class="btn btn-outline" id="clear-filters">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- Job Listings -->
+                    <div class="jobs-container">
+                        <div class="jobs-list" id="jobs-list">
+                            <!-- Jobs will be dynamically loaded here -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="pagination" id="pagination">
+                            <!-- Pagination will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Companies Page -->
+        <div class="page" id="companies-page">
+            <section class="companies-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>Top Companies</h1>
+                        <p>Explore companies and their job opportunities</p>
+                    </div>
+
+                    <div class="companies-grid" id="companies-grid">
+                        <!-- Companies will be dynamically loaded here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about-page">
+            <section class="about-section">
+                <div class="container">
+                    <div class="page-header">
+                        <h1>About CareerJobConnect</h1>
+                        <p>Connecting talent with opportunity</p>
+                    </div>
+
+                    <div class="about-content">
+                        <div class="about-text">
+                            <h2>Our Mission</h2>
+                            <p>We're dedicated to creating meaningful connections between talented professionals and innovative companies. Our platform streamlines the job search process, making it easier for job seekers to find their ideal roles and for employers to discover exceptional talent.</p>
+                            
+                            <h2>What We Offer</h2>
+                            <ul>
+                                <li>Comprehensive job search platform</li>
+                                <li>Advanced matching algorithms</li>
+                                <li>Direct communication with employers</li>
+                                <li>Career development resources</li>
+                                <li>Professional networking opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page -->
+        <div class="page" id="login-page">
+            <section class="auth-section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-form">
+                            <h2>Login to Your Account</h2>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <input type="email" id="login-email" placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="login-password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="remember-me">
+                                        <span>Remember me</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                            </form>
+                            
+                            <div class="auth-footer">
+                                <p>Don't have an account? <a href="#" data-page="register">Sign up here</a></p>
+                                <p><a href="#" id="admin-login">Admin Login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Register Page -->
+        <div class="page" id="register-page">
+            <section class="auth-section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-form">
+                            <h2>Create Your Account</h2>
+                            <form id="register-form">
+                                <div class="form-group">
+                                    <input type="text" id="register-name" placeholder="Full Name" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="register-email" placeholder="Email Address" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="register-password" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="register-confirm-password" placeholder="Confirm Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <select id="register-type" required>
+                                        <option value="">Select Account Type</option>
+                                        <option value="jobseeker">Job Seeker</option>
+                                        <option value="employer">Employer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="terms-agreement" required>
+                                        <span>I agree to the Terms of Service and Privacy Policy</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                            </form>
+                            
+                            <div class="auth-footer">
+                                <p>Already have an account? <a href="#" data-page="login">Login here</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div class="page" id="dashboard-page">
+            <div class="dashboard-container">
+                <!-- Dashboard Sidebar -->
+                <aside class="dashboard-sidebar">
+                    <div class="user-profile">
+                        <div class="user-avatar" id="user-avatar">U</div>
+                        <div class="user-info">
+                            <h3 id="user-name">User Name</h3>
+                            <p id="user-role">Job Seeker</p>
+                        </div>
+                    </div>
+                    
+                    <nav class="dashboard-nav">
+                        <a href="#" class="nav-item active" data-section="overview">
+                            <span>📊 Overview</span>
+                        </a>
+                        <a href="#" class="nav-item" data-section="profile">
+                            <span>👤 Profile</span>
+                        </a>
+                        <a href="#" class="nav-item jobseeker-only" data-section="applications">
+                            <span>📝 My Applications</span>
+                        </a>
+                        <a href="#" class="nav-item jobseeker-only" data-section="saved-jobs">
+                            <span>💾 Saved Jobs</span>
+                        </a>
+                        <a href="#" class="nav-item employer-only" data-section="post-job">
+                            <span>📋 Post Job</span>
+                        </a>
+                        <a href="#" class="nav-item employer-only" data-section="manage-jobs">
+                            <span>🏢 Manage Jobs</span>
+                        </a>
+                        <a href="#" class="nav-item admin-only" data-section="admin">
+                            <span>⚙️ Admin Panel</span>
+                        </a>
+                        <a href="#" class="nav-item" id="logout-btn">
+                            <span>🚪 Logout</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Dashboard Content -->
+                <main class="dashboard-content">
+                    <!-- Overview Section -->
+                    <div class="dashboard-section active" id="overview-section">
+                        <div class="section-header">
+                            <h1>Dashboard Overview</h1>
+                        </div>
+                        
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <h3 id="applied-jobs-count">0</h3>
+                                <p>Applications Sent</p>
+                                <div class="stat-icon">📝</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="saved-jobs-count">0</h3>
+                                <p>Saved Jobs</p>
+                                <div class="stat-icon">💾</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="profile-views">0</h3>
+                                <p>Profile Views</p>
+                                <div class="stat-icon">👁️</div>
+                            </div>
+                            <div class="stat-card employer-only">
+                                <h3 id="posted-jobs-count">0</h3>
+                                <p>Jobs Posted</p>
+                                <div class="stat-icon">🏢</div>
+                            </div>
+                        </div>
+
+                        <div class="recent-activity">
+                            <h2>Recent Activity</h2>
+                            <div class="activity-list" id="activity-list">
+                                <!-- Activities will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div class="dashboard-section" id="profile-section">
+                        <div class="section-header">
+                            <h1>My Profile</h1>
+                        </div>
+                        
+                        <form class="profile-form" id="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="profile-name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="profile-email">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="tel" id="profile-phone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="profile-location">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Professional Title</label>
+                                <input type="text" id="profile-title">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Bio</label>
+                                <textarea id="profile-bio" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Skills (comma separated)</label>
+                                <input type="text" id="profile-skills">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+
+                    <!-- Applications Section -->
+                    <div class="dashboard-section" id="applications-section">
+                        <div class="section-header">
+                            <h1>My Applications</h1>
+                        </div>
+                        
+                        <div class="applications-list" id="applications-list">
+                            <!-- Applications will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Saved Jobs Section -->
+                    <div class="dashboard-section" id="saved-jobs-section">
+                        <div class="section-header">
+                            <h1>Saved Jobs</h1>
+                        </div>
+                        
+                        <div class="saved-jobs-list" id="saved-jobs-list">
+                            <!-- Saved jobs will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Post Job Section (Employer Only) -->
+                    <div class="dashboard-section" id="post-job-section">
+                        <div class="section-header">
+                            <h1>Post New Job</h1>
+                        </div>
+                        
+                        <form class="job-form" id="job-form">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <input type="text" id="job-title" required>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Company Name</label>
+                                    <input type="text" id="job-company" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="job-location" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="job-category" required>
+                                        <option value="">Select Category</option>
+                                        <option value="technology">Technology</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="design">Design</option>
+                                        <option value="sales">Sales</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="healthcare">Healthcare</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Job Type</label>
+                                    <select id="job-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="full-time">Full Time</option>
+                                        <option value="part-time">Part Time</option>
+                                        <option value="contract">Contract</option>
+                                        <option value="remote">Remote</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Experience Level</label>
+                                    <select id="job-experience" required>
+                                        <option value="">Select Level</option>
+                                        <option value="entry">Entry Level</option>
+                                        <option value="mid">Mid Level</option>
+                                        <option value="senior">Senior Level</option>
+                                        <option value="executive">Executive</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary Range</label>
+                                    <input type="text" id="job-salary" placeholder="e.g., $50,000 - $70,000">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Job Description</label>
+                                <textarea id="job-description" rows="6" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Requirements</label>
+                                <textarea id="job-requirements" rows="4" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Post Job</button>
+                        </form>
+                    </div>
+
+                    <!-- Manage Jobs Section (Employer Only) -->
+                    <div class="dashboard-section" id="manage-jobs-section">
+                        <div class="section-header">
+                            <h1>Manage Jobs</h1>
+                        </div>
+                        
+                        <div class="manage-jobs-list" id="manage-jobs-list">
+                            <!-- Posted jobs will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Admin Panel Section -->
+                    <div class="dashboard-section" id="admin-section">
+                        <div class="section-header">
+                            <h1>Admin Panel</h1>
+                        </div>
+                        
+                        <div class="admin-tabs">
+                            <button class="tab-btn active" data-tab="users"><span class="tab-icon">👤</span> Users</button>
+                            <button class="tab-btn" data-tab="jobs"><span class="tab-icon">💼</span> Jobs</button>
+                            <button class="tab-btn" data-tab="companies"><span class="tab-icon">🏢</span> Companies</button>
+                            <button class="tab-btn" data-tab="analytics"><span class="tab-icon">📊</span> Analytics</button>
+                            <button class="tab-btn" data-tab="system-health"><span class="tab-icon">🩺</span> System Health</button>
+                            <button class="tab-btn" data-tab="audit-logs"><span class="tab-icon">📝</span> Audit Logs & Compliance</button>
+                            <button class="tab-btn" data-tab="support-ticket"><span class="tab-icon">🎫</span> Support Ticket</button>
+                            <button class="tab-btn" data-tab="backups"><span class="tab-icon">💾</span> Backups</button>
+                        </div>
+                        
+                        <div class="admin-content">
+            <!-- System Health Tab -->
+            <div class="tab-content" id="system-health-tab">
+                <div class="system-health-section">
+                    <h3>System Health Overview</h3>
+                    <div class="health-grid">
+                        <div class="health-card"><strong>Status:</strong> <span id="system-status">Online</span></div>
+                        <div class="health-card"><strong>Uptime:</strong> <span id="system-uptime">99.99%</span></div>
+                        <div class="health-card"><strong>Response Time:</strong> <span id="system-response">120ms</span></div>
+                    </div>
+                    <div class="health-details">
+                        <h4>Recent Checks</h4>
+                        <ul id="system-health-checks">
+                            <li>Database: Connected</li>
+                            <li>API: All endpoints responsive</li>
+                            <li>Disk Space: 80% free</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Logs & Compliance Tab -->
+            <div class="tab-content" id="audit-logs-tab">
+                <div class="audit-logs-section">
+                    <h3>Audit Logs & Compliance</h3>
+                    <div class="compliance-status">
+                        <strong>Compliance:</strong> <span class="badge badge-success">Compliant</span>
+                    </div>
+                    <div class="audit-logs-table">
+                        <table>
+                            <thead>
+                                <tr><th>Date</th><th>User</th><th>Action</th><th>Status</th></tr>
+                            </thead>
+                            <tbody id="audit-logs-table-body">
+                                <tr><td>2025-09-18</td><td>admin</td><td>Login</td><td>Success</td></tr>
+                                <tr><td>2025-09-18</td><td>admin</td><td>Backup</td><td>Success</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Ticket Tab -->
+            <div class="tab-content" id="support-ticket-tab">
+                <div class="support-ticket-section">
+                    <h3>Support Tickets</h3>
+                    <button class="btn btn-primary btn-sm" onclick="openNewTicketModal()">New Ticket</button>
+                    <div class="support-tickets-table">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th>Subject</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="support-tickets-table-body">
+                                <tr><td>1</td><td>Cannot login</td><td><span class="badge badge-warning">Open</span></td><td>2025-09-18</td><td><button class="btn btn-outline btn-sm">View</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backups Tab -->
+            <div class="tab-content" id="backups-tab">
+                <div class="backups-section">
+                    <h3>Backups</h3>
+                    <div class="backup-status">
+                        <strong>Last Backup:</strong> <span id="last-backup-date">2025-09-17 23:00</span>
+                        <button class="btn btn-outline btn-sm" onclick="triggerBackup()">Run Backup</button>
+                    </div>
+                    <div class="backups-table">
+                        <table>
+                            <thead>
+                                <tr><th>Date</th><th>Status</th><th>Download</th></tr>
+                            </thead>
+                            <tbody id="backups-table-body">
+                                <tr><td>2025-09-17 23:00</td><td><span class="badge badge-success">Success</span></td><td><button class="btn btn-outline btn-sm">Download</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                            <!-- Users Tab -->
+                            <div class="tab-content active" id="users-tab">
+                                <div class="admin-users-controls">
+                                    <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">Add User</button>
+                                    <input type="text" id="admin-user-search" placeholder="Search users by name or email">
+                                    <select id="admin-user-type-filter">
+                                        <option value="">All Types</option>
+                                        <option value="jobseeker">Job Seeker</option>
+                                        <option value="employer">Employer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportUsersCSV()">Export CSV</button>
+                                </div>
+                                <div class="admin-stats">
+                                    <div class="admin-stat">
+                                        <h3 id="total-users-admin">0</h3>
+                                        <p>Total Users</p>
+                                    </div>
+                                    <div class="admin-stat">
+                                        <h3 id="new-users-today">0</h3>
+                                        <p>New Users Today</p>
+                                    </div>
+                                    <div class="admin-stat">
+                                        <h3 id="active-users">0</h3>
+                                        <p>Active Users</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="users-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Type</th>
+                                                <th>Joined</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="users-table-body">
+                                            <!-- Users will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Jobs Tab -->
+                            <div class="tab-content" id="jobs-tab">
+                                <div class="admin-jobs-controls">
+                                    <input type="text" id="admin-job-search" placeholder="Search jobs by title or company">
+                                    <select id="admin-job-status-filter">
+                                        <option value="">All Statuses</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportJobsCSV()">Export CSV</button>
+                                </div>
+                                <div class="admin-stats">
+                                    <div class="admin-stat">
+                                        <h3 id="total-jobs-admin">0</h3>
+                                        <p>Total Jobs</p>
+                                    </div>
+                                    <div class="admin-stat">
+                                        <h3 id="active-jobs-admin">0</h3>
+                                        <p>Active Jobs</p>
+                                    </div>
+                                    <div class="admin-stat">
+                                        <h3 id="pending-jobs">0</h3>
+                                        <p>Pending Approval</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="jobs-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Job Title</th>
+                                                <th>Company</th>
+                                                <th>Category</th>
+                                                <th>Posted</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-jobs-table-body">
+                                            <!-- Jobs will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Companies Tab -->
+                            <div class="tab-content" id="companies-tab">
+                                <div class="admin-companies-controls">
+                                    <input type="text" id="admin-company-search" placeholder="Search companies by name or industry">
+                                    <select id="admin-company-status-filter">
+                                        <option value="">All Statuses</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                    <button class="btn btn-outline btn-sm" onclick="exportCompaniesCSV()">Export CSV</button>
+                                </div>
+                                <div class="companies-management">
+                                    <h3>Company Management</h3>
+                                    <div class="companies-table">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Company Name</th>
+                                                    <th>Industry</th>
+                                                    <th>Jobs Posted</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="admin-companies-table-body">
+                                                <!-- Companies will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Analytics Tab -->
+                            <div class="tab-content" id="analytics-tab">
+                                <div class="analytics-dashboard">
+                                    <h3>Platform Analytics</h3>
+                                    <div class="analytics-grid">
+                                        <div class="analytics-card">
+                                            <h4>User Growth</h4>
+                                            <div class="growth-stat">+15%</div>
+                                            <p>This month</p>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>Job Applications</h4>
+                                            <div class="growth-stat">+28%</div>
+                                            <p>This week</p>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>Success Rate</h4>
+                                            <div class="growth-stat">67%</div>
+                                            <p>Hire rate</p>
+                                        </div>
+                                        <div class="analytics-card">
+                                            <h4>Platform Revenue</h4>
+                                            <div class="growth-stat">$125k</div>
+                                            <p>This month</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
